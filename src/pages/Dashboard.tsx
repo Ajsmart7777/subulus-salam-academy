@@ -32,7 +32,7 @@ const Dashboard = () => {
       <div className="container py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground mb-1">Assalamu Alaikum, Student</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground mb-1">Assalamu Alaikum, {displayName}</h1>
           <p className="text-muted-foreground font-body">Continue your journey of knowledge.</p>
         </div>
 
