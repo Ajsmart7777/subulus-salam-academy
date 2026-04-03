@@ -24,7 +24,8 @@ const StatCard = ({ icon: Icon, label, value, sub }: { icon: any; label: string;
 
 const Dashboard = () => {
   const enrolled = courses.filter((c) => c.enrolled);
-
+  const { profile } = useAuth();
+  const displayName = profile?.full_name || "Student";
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
