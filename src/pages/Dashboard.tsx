@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Flame, BookOpen, Trophy, Target, Clock, Star } from "lucide-react";
 import { courses, studentStats } from "@/data/mockData";
+import { useAuth } from "@/contexts/AuthContext";
 
 const StatCard = ({ icon: Icon, label, value, sub }: { icon: any; label: string; value: string | number; sub?: string }) => (
   <div className="bg-card rounded-lg p-5 shadow-card">
@@ -23,14 +24,15 @@ const StatCard = ({ icon: Icon, label, value, sub }: { icon: any; label: string;
 
 const Dashboard = () => {
   const enrolled = courses.filter((c) => c.enrolled);
-
+  const { profile } = useAuth();
+  const displayName = profile?.full_name || "Student";
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground mb-1">Assalamu Alaikum, Student</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground mb-1">Assalamu Alaikum, {displayName}</h1>
           <p className="text-muted-foreground font-body">Continue your journey of knowledge.</p>
         </div>
 

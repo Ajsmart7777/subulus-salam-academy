@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
 const navLinks = [
@@ -13,6 +14,7 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut, loading } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -38,12 +40,22 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">Log In</Link>
-          </Button>
-          <Button variant="hero" size="sm" asChild>
-            <Link to="/register">Sign Up</Link>
-          </Button>
+          {!loading && (
+            user ? (
+              <Button variant="ghost" size="sm" className="gap-2" onClick={signOut}>
+                <LogOut className="h-4 w-4" /> Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">Log In</Link>
+                </Button>
+                <Button variant="hero" size="sm" asChild>
+                  <Link to="/register">Sign Up</Link>
+                </Button>
+              </>
+            )
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -66,12 +78,20 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="flex gap-3 pt-2">
-            <Button variant="ghost" size="sm" className="flex-1" asChild>
-              <Link to="/login">Log In</Link>
-            </Button>
-            <Button variant="hero" size="sm" className="flex-1" asChild>
-              <Link to="/register">Sign Up</Link>
-            </Button>
+            {user ? (
+              <Button variant="ghost" size="sm" className="flex-1 gap-2" onClick={() => { signOut(); setMobileOpen(false); }}>
+                <LogOut className="h-4 w-4" /> Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" className="flex-1" asChild>
+                  <Link to="/login" onClick={() => setMobileOpen(false)}>Log In</Link>
+                </Button>
+                <Button variant="hero" size="sm" className="flex-1" asChild>
+                  <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
