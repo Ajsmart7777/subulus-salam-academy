@@ -115,14 +115,26 @@ export function useCourseEnrollments(courseId: string | undefined) {
   return useQuery({
     queryKey: ["course-enrollments", courseId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: enrollments, error } = await supabase
         .from("enrollments")
-        .select("*, profiles:user_id(full_name, avatar_url)")
+        .select("*")
         .eq("course_id", courseId!);
       if (error) throw error;
-      return data;
+      if (!enrollments?.length) return [];
+
+      const userIds = enrollments.map((e) => e.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url")
+        .in("user_id", userIds);
+
+      return enrollments.map((e) => ({
+        ...e,
+        profiles: profiles?.find((p) => p.user_id === e.user_id) || null,
+      }));
     },
     enabled: !!courseId,
+  });
   });
 }
 
