@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
-const navLinks = [
+const baseLinks = [
   { label: "Home", to: "/" },
   { label: "Courses", to: "/courses" },
   { label: "Dashboard", to: "/dashboard" },
