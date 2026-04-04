@@ -55,6 +55,30 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/teacher"
+              element={
+                <ProtectedRoute requiredRole="teacher">
+                  <TeacherDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/course/:courseId"
+              element={
+                <ProtectedRoute requiredRole="teacher">
+                  <TeacherCoursePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/course/:courseId/students"
+              element={
+                <ProtectedRoute requiredRole="teacher">
+                  <TeacherStudentsPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
