@@ -135,7 +135,6 @@ export function useCourseEnrollments(courseId: string | undefined) {
     },
     enabled: !!courseId,
   });
-  });
 }
 
 export function useCourseMutations() {
