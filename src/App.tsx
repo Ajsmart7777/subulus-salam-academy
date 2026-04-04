@@ -13,6 +13,9 @@ import LessonPage from "./pages/LessonPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherCoursePage from "./pages/teacher/TeacherCoursePage";
+import TeacherStudentsPage from "./pages/teacher/TeacherStudentsPage";
 
 const queryClient = new QueryClient();
 
