@@ -15,9 +15,11 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, signOut, loading, hasRole } = useAuth();
-  const navLinks = hasRole("teacher") || hasRole("admin")
-    ? [...baseLinks, { label: "Teacher Panel", to: "/teacher" }]
-    : baseLinks;
+  const navLinks = [
+    ...baseLinks,
+    ...(hasRole("teacher") || hasRole("admin") ? [{ label: "Teacher Panel", to: "/teacher" }] : []),
+    ...(hasRole("admin") ? [{ label: "Admin Panel", to: "/admin" }] : []),
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
