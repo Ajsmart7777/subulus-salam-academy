@@ -18,8 +18,19 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
+    // Read Flutterwave keys from site_settings table
+    const { data: settingsRows } = await supabaseAdmin
+      .from('site_settings')
+      .select('key, value')
+      .in('key', ['flutterwave_public_key', 'flutterwave_secret_key'])
+
+    const settings: Record<string, string> = {}
+    ;(settingsRows ?? []).forEach((r: any) => { settings[r.key] = r.value })
+
+    const flw_public_key = settings.flutterwave_public_key
+    const flw_secret_key = settings.flutterwave_secret_key
+
     if (action === 'initialize') {
-      // Create a pending payment record
       const flw_ref = `SJ-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       const { data, error } = await supabaseAdmin
         .from('payments')
@@ -36,11 +47,9 @@ Deno.serve(async (req) => {
 
       if (error) throw error
 
-      // Get Flutterwave keys from secrets
-      const flw_public_key = Deno.env.get('FLUTTERWAVE_PUBLIC_KEY')
       if (!flw_public_key) {
         return new Response(
-          JSON.stringify({ error: 'Flutterwave not configured. Admin must set API keys.' }),
+          JSON.stringify({ error: 'Flutterwave not configured. Admin must set API keys in Site Settings.' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
@@ -52,7 +61,6 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'verify') {
-      const flw_secret_key = Deno.env.get('FLUTTERWAVE_SECRET_KEY')
       if (!flw_secret_key) {
         return new Response(
           JSON.stringify({ error: 'Flutterwave not configured' }),
@@ -60,7 +68,6 @@ Deno.serve(async (req) => {
         )
       }
 
-      // Verify transaction with Flutterwave
       const verifyRes = await fetch(
         `https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`,
         { headers: { Authorization: `Bearer ${flw_secret_key}` } }
@@ -68,7 +75,6 @@ Deno.serve(async (req) => {
       const verifyData = await verifyRes.json()
 
       if (verifyData.status === 'success' && verifyData.data.status === 'successful') {
-        // Update payment status
         await supabaseAdmin
           .from('payments')
           .update({
@@ -78,7 +84,6 @@ Deno.serve(async (req) => {
           })
           .eq('flutterwave_ref', tx_ref)
 
-        // Enroll user in the course
         const { error: enrollError } = await supabaseAdmin
           .from('enrollments')
           .insert({ user_id, course_id })

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -34,6 +35,7 @@ const CoursePage = () => {
   const { courseId } = useParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   // Fetch course
   const { data: course, isLoading: courseLoading } = useQuery({
@@ -177,6 +179,67 @@ const CoursePage = () => {
     },
   });
 
+  // Flutterwave payment handler
+  const handlePayment = async () => {
+    if (!user || !courseId) return;
+    setPaymentLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("handle-payment", {
+        body: { action: "initialize", course_id: courseId, user_id: user.id, amount: coursePrice, currency: "NGN" },
+      });
+      if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
+
+      const { flw_public_key, flw_ref } = data;
+
+      // Load Flutterwave inline script
+      const script = document.createElement("script");
+      script.src = "https://checkout.flutterwave.com/v3.js";
+      script.onload = () => {
+        (window as any).FlutterwaveCheckout({
+          public_key: flw_public_key,
+          tx_ref: flw_ref,
+          amount: coursePrice,
+          currency: "NGN",
+          payment_options: "card,banktransfer,ussd",
+          customer: { email: user.email ?? "" },
+          customizations: {
+            title: "Subulus-Salam Academy",
+            description: `Enrollment: ${course?.title}`,
+            logo: "",
+          },
+          callback: async (response: any) => {
+            try {
+              const { data: verifyData } = await supabase.functions.invoke("handle-payment", {
+                body: {
+                  action: "verify",
+                  transaction_id: response.transaction_id,
+                  tx_ref: flw_ref,
+                  user_id: user.id,
+                  course_id: courseId,
+                },
+              });
+              if (verifyData?.success) {
+                queryClient.invalidateQueries({ queryKey: ["enrollment", courseId] });
+                toast({ title: "Payment Successful!", description: "You are now enrolled in this course." });
+              } else {
+                toast({ title: "Verification failed", description: verifyData?.message, variant: "destructive" });
+              }
+            } catch (err: any) {
+              toast({ title: "Error", description: err.message, variant: "destructive" });
+            }
+            setPaymentLoading(false);
+          },
+          onclose: () => setPaymentLoading(false),
+        });
+      };
+      document.head.appendChild(script);
+    } catch (err: any) {
+      toast({ title: "Payment Error", description: err.message, variant: "destructive" });
+      setPaymentLoading(false);
+    }
+  };
+
   // Module unlock logic
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true; // First module always unlocked
@@ -275,8 +338,14 @@ const CoursePage = () => {
                   {enrollMutation.isPending ? "Enrolling..." : "Enroll for Free"}
                 </Button>
               ) : (
-                <Button variant="hero" className="gap-2">
-                  <CreditCard className="h-4 w-4" /> Pay ₦{coursePrice.toLocaleString()} to Enroll
+                <Button
+                  variant="hero"
+                  className="gap-2"
+                  disabled={paymentLoading}
+                  onClick={handlePayment}
+                >
+                  <CreditCard className="h-4 w-4" />
+                  {paymentLoading ? "Processing..." : `Pay ₦${coursePrice.toLocaleString()} to Enroll`}
                 </Button>
               )}
             </div>
