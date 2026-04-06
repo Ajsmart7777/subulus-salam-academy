@@ -16,6 +16,12 @@ import NotFound from "./pages/NotFound";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherCoursePage from "./pages/teacher/TeacherCoursePage";
 import TeacherStudentsPage from "./pages/teacher/TeacherStudentsPage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AdminCoursesPage from "./pages/admin/AdminCoursesPage";
+import AdminReferralsPage from "./pages/admin/AdminReferralsPage";
+import AdminReportsPage from "./pages/admin/AdminReportsPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +85,13 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            {/* Admin routes */}
+            <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsersPage /></ProtectedRoute>} />
+            <Route path="/admin/courses" element={<ProtectedRoute requiredRole="admin"><AdminCoursesPage /></ProtectedRoute>} />
+            <Route path="/admin/referrals" element={<ProtectedRoute requiredRole="admin"><AdminReferralsPage /></ProtectedRoute>} />
+            <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReportsPage /></ProtectedRoute>} />
+            <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSettingsPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
