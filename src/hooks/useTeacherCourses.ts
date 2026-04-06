@@ -220,6 +220,19 @@ export function useCourseMutations() {
     onError: (err: Error) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
+  const updateLesson = useMutation({
+    mutationFn: async ({ id, moduleId, ...data }: { id: string; moduleId: string; content_url?: string | null; content_text?: string | null }) => {
+      const { error } = await supabase.from("lessons").update(data).eq("id", id);
+      if (error) throw error;
+      return moduleId;
+    },
+    onSuccess: (moduleId) => {
+      queryClient.invalidateQueries({ queryKey: ["module-lessons", moduleId] });
+      toast({ title: "Lesson updated" });
+    },
+    onError: (err: Error) => toast({ title: "Error", description: err.message, variant: "destructive" }),
+  });
+
   const deleteLesson = useMutation({
     mutationFn: async ({ id, moduleId }: { id: string; moduleId: string }) => {
       const { error } = await supabase.from("lessons").delete().eq("id", id);
