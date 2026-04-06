@@ -275,8 +275,14 @@ const CoursePage = () => {
                   {enrollMutation.isPending ? "Enrolling..." : "Enroll for Free"}
                 </Button>
               ) : (
-                <Button variant="hero" className="gap-2">
-                  <CreditCard className="h-4 w-4" /> Pay ₦{coursePrice.toLocaleString()} to Enroll
+                <Button
+                  variant="hero"
+                  className="gap-2"
+                  disabled={paymentLoading}
+                  onClick={handlePayment}
+                >
+                  <CreditCard className="h-4 w-4" />
+                  {paymentLoading ? "Processing..." : `Pay ₦${coursePrice.toLocaleString()} to Enroll`}
                 </Button>
               )}
             </div>
