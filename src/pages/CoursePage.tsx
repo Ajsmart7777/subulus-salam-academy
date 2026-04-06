@@ -34,6 +34,7 @@ const CoursePage = () => {
   const { courseId } = useParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   // Fetch course
   const { data: course, isLoading: courseLoading } = useQuery({
