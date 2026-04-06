@@ -15,19 +15,19 @@ const HeroSection = () => {
       <div className="container relative z-10 py-20">
         <div className="max-w-3xl mx-auto text-center">
           <div className="animate-fade-up flex justify-center mb-6">
-            <img src={logoIcon} alt="Subulus-Salam" className="h-20 w-20" width={512} height={512} />
+            <img src={logoIcon} alt="Sabilul Jannah" className="h-20 w-20" width={512} height={512} />
           </div>
 
           <p className="animate-fade-up text-sm font-body font-semibold tracking-widest uppercase text-primary mb-4">
-            سبل السلام
+            سبيل الجنة
           </p>
 
           <h1 className="animate-fade-up text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground leading-tight mb-6">
-            Subulus-Salam
+            Sabilul Jannah
           </h1>
 
           <p className="animate-fade-up-delay text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 font-body">
-            Paths of Peace — Your structured journey through authentic Islamic knowledge.
+            International Online Islamiyya — Your structured journey through authentic Islamic knowledge.
             Learn step-by-step with discipline, sincerity, and guidance.
           </p>
 

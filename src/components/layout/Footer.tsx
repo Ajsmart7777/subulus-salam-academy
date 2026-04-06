@@ -27,7 +27,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-border mt-8 pt-6 text-center">
-          <p className="text-xs text-muted-foreground font-body">© 2026 Subulus-Salam. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground font-body">© 2026 Sabilul Jannah. All rights reserved.</p>
         </div>
       </div>
     </footer>

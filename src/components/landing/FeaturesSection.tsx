@@ -39,7 +39,7 @@ const FeaturesSection = () => {
       <div className="container">
         <div className="text-center mb-16">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-3 font-body">
-            Why Subulus-Salam
+            Why Sabilul Jannah
           </p>
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
             A Real Islamiyya Experience, Online
