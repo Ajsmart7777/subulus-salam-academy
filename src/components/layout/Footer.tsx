@@ -6,9 +6,9 @@ const Footer = () => {
       <div className="container">
         <div className="grid md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-heading text-lg font-bold text-foreground mb-3">Subulus-Salam</h3>
+            <h3 className="font-heading text-lg font-bold text-foreground mb-3">Sabilul Jannah</h3>
             <p className="text-sm text-muted-foreground font-body leading-relaxed">
-              Paths of Peace — Structured Islamic education for the modern learner.
+              International Online Islamiyya — Structured Islamic education for the modern learner.
             </p>
           </div>
           <div>
@@ -27,7 +27,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-border mt-8 pt-6 text-center">
-          <p className="text-xs text-muted-foreground font-body">© 2026 Subulus-Salam. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground font-body">© 2026 Sabilul Jannah. All rights reserved.</p>
         </div>
       </div>
     </footer>

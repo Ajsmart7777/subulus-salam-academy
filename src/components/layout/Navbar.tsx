@@ -23,8 +23,8 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logoIcon} alt="Subulus-Salam" className="h-8 w-8" width={512} height={512} />
-          <span className="font-heading text-xl font-bold text-foreground">Subulus-Salam</span>
+          <img src={logoIcon} alt="Sabilul Jannah" className="h-8 w-8" width={512} height={512} />
+          <span className="font-heading text-xl font-bold text-foreground">Sabilul Jannah</span>
         </Link>
 
         {/* Desktop nav */}
