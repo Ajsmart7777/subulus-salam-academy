@@ -272,5 +272,5 @@ export function useCourseMutations() {
     onError: (err: Error) => toast({ title: "Error", description: err.message, variant: "destructive" }),
   });
 
-  return { createCourse, updateCourse, deleteCourse, createModule, deleteModule, createLesson, deleteLesson, createAssignment, deleteAssignment };
+  return { createCourse, updateCourse, deleteCourse, createModule, deleteModule, createLesson, updateLesson, deleteLesson, createAssignment, deleteAssignment };
 }
