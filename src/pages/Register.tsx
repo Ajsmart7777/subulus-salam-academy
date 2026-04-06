@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -9,9 +9,13 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get("ref") || "";
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [referral, setReferral] = useState(referralCode);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -24,7 +28,10 @@ const Register = () => {
       email,
       password,
       options: {
-        data: { full_name: fullName },
+        data: {
+          full_name: fullName,
+          ...(referral ? { referred_by: referral } : {}),
+        },
         emailRedirectTo: window.location.origin,
       },
     });
@@ -84,6 +91,16 @@ const Register = () => {
                 placeholder="••••••••"
                 minLength={6}
                 required
+              />
+            </div>
+            <div>
+              <Label htmlFor="referral" className="font-body">Referral Code (optional)</Label>
+              <Input
+                id="referral"
+                type="text"
+                value={referral}
+                onChange={(e) => setReferral(e.target.value)}
+                placeholder="e.g. SJ-abc12345"
               />
             </div>
             <Button type="submit" variant="hero" className="w-full" disabled={loading}>

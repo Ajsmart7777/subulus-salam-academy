@@ -3,13 +3,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Trash2, DollarSign } from "lucide-react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const AdminCoursesPage = () => {
   const queryClient = useQueryClient();
+  const [pricingCourse, setPricingCourse] = useState<{ id: string; title: string; price: number } | null>(null);
+  const [newPrice, setNewPrice] = useState("");
 
   const { data: courses, isLoading } = useQuery({
     queryKey: ["admin-courses"],
@@ -20,7 +26,6 @@ const AdminCoursesPage = () => {
         .order("created_at", { ascending: true });
       if (error) throw error;
 
-      // Get enrollment counts
       const courseIds = data.map((c) => c.id);
       const { data: enrollments } = await supabase
         .from("enrollments")
@@ -32,7 +37,6 @@ const AdminCoursesPage = () => {
         enrollCountMap[e.course_id] = (enrollCountMap[e.course_id] ?? 0) + 1;
       });
 
-      // Get teacher names
       const teacherIds = [...new Set(data.map((c) => c.teacher_id))];
       const { data: profiles } = await supabase
         .from("profiles")
@@ -70,9 +74,21 @@ const AdminCoursesPage = () => {
     },
   });
 
+  const updatePrice = useMutation({
+    mutationFn: async ({ id, price }: { id: string; price: number }) => {
+      const { error } = await supabase.from("courses").update({ price }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
+      setPricingCourse(null);
+      toast({ title: "Price updated" });
+    },
+  });
+
   return (
     <AdminLayout title="Course Management">
-      <p className="text-muted-foreground font-body mb-6">Manage all courses across the platform.</p>
+      <p className="text-muted-foreground font-body mb-6">Manage all courses and set pricing.</p>
 
       {isLoading ? (
         <div className="flex justify-center py-20">
@@ -90,6 +106,7 @@ const AdminCoursesPage = () => {
                   <TableHead>Category</TableHead>
                   <TableHead>Level</TableHead>
                   <TableHead>Teacher</TableHead>
+                  <TableHead>Price</TableHead>
                   <TableHead>Enrolled</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
@@ -102,6 +119,9 @@ const AdminCoursesPage = () => {
                     <TableCell><Badge variant="secondary" className="text-xs">{c.category || "—"}</Badge></TableCell>
                     <TableCell className="text-sm">{c.level}</TableCell>
                     <TableCell className="text-sm">{c.teacherName}</TableCell>
+                    <TableCell className="text-sm font-medium">
+                      {(c as any).price ? `₦${Number((c as any).price).toLocaleString()}` : "Free"}
+                    </TableCell>
                     <TableCell className="text-sm">{c.enrollmentCount}</TableCell>
                     <TableCell>
                       <Badge variant={c.published ? "default" : "outline"} className="text-xs">
@@ -113,6 +133,16 @@ const AdminCoursesPage = () => {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => {
+                            setPricingCourse({ id: c.id, title: c.title, price: (c as any).price ?? 0 });
+                            setNewPrice(String((c as any).price ?? 0));
+                          }}
+                        >
+                          <DollarSign className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => togglePublish.mutate({ id: c.id, published: !c.published })}
                         >
                           {c.published ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
@@ -121,9 +151,7 @@ const AdminCoursesPage = () => {
                           variant="outline"
                           size="sm"
                           className="text-destructive"
-                          onClick={() => {
-                            if (confirm("Delete this course?")) deleteCourse.mutate(c.id);
-                          }}
+                          onClick={() => { if (confirm("Delete this course?")) deleteCourse.mutate(c.id); }}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -136,6 +164,34 @@ const AdminCoursesPage = () => {
           </CardContent>
         </Card>
       )}
+
+      <Dialog open={!!pricingCourse} onOpenChange={() => setPricingCourse(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="font-heading">Set Course Price</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground font-body">{pricingCourse?.title}</p>
+          <div className="space-y-4 pt-2">
+            <div>
+              <Label>Price (NGN) — Set to 0 for free</Label>
+              <Input
+                type="number"
+                min="0"
+                value={newPrice}
+                onChange={(e) => setNewPrice(e.target.value)}
+                placeholder="0"
+              />
+            </div>
+            <Button
+              variant="hero"
+              className="w-full"
+              onClick={() => pricingCourse && updatePrice.mutate({ id: pricingCourse.id, price: Number(newPrice) })}
+            >
+              Save Price
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 };

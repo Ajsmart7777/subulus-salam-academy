@@ -99,6 +99,30 @@ export type Database = {
           },
         ]
       }
+      certificates: {
+        Row: {
+          certificate_number: string
+          course_id: string
+          id: string
+          issued_at: string
+          user_id: string
+        }
+        Insert: {
+          certificate_number: string
+          course_id: string
+          id?: string
+          issued_at?: string
+          user_id: string
+        }
+        Update: {
+          certificate_number?: string
+          course_id?: string
+          id?: string
+          issued_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           category: string | null
@@ -107,6 +131,7 @@ export type Database = {
           id: string
           image_url: string | null
           level: string | null
+          price: number | null
           published: boolean | null
           teacher_id: string
           title: string
@@ -120,6 +145,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           level?: string | null
+          price?: number | null
           published?: boolean | null
           teacher_id: string
           title: string
@@ -133,6 +159,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           level?: string | null
+          price?: number | null
           published?: boolean | null
           teacher_id?: string
           title?: string
@@ -293,6 +320,45 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount: number
+          course_id: string
+          created_at: string
+          currency: string
+          flutterwave_ref: string | null
+          flutterwave_tx_id: string | null
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          course_id: string
+          created_at?: string
+          currency?: string
+          flutterwave_ref?: string | null
+          flutterwave_tx_id?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          course_id?: string
+          created_at?: string
+          currency?: string
+          flutterwave_ref?: string | null
+          flutterwave_tx_id?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -317,6 +383,54 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referral_rewards: {
+        Row: {
+          created_at: string
+          credits: number
+          enrollment_id: string
+          id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          enrollment_id: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          enrollment_id?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
         }
         Relationships: []
       }
