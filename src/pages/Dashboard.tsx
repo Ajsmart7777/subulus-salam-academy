@@ -140,20 +140,39 @@ const Dashboard = () => {
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="font-heading flex items-center gap-2">
-                <Gift className="h-5 w-5 text-accent" /> Your Referral Code
+                <Gift className="h-5 w-5 text-accent" /> Your Referral
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-3 flex-wrap">
-                <code className="bg-muted px-4 py-2 rounded-lg text-lg font-mono font-bold text-foreground">
-                  {referralData.code}
-                </code>
-                <Button variant="outline" size="sm" onClick={copyReferralLink}>
-                  <Copy className="h-4 w-4 mr-1" /> Copy Link
-                </Button>
+            <CardContent className="space-y-4">
+              {/* Referral Code */}
+              <div>
+                <p className="text-xs text-muted-foreground font-body mb-1.5">Your Referral Code</p>
+                <div className="flex items-center gap-2">
+                  <code className="bg-muted px-4 py-2 rounded-lg text-lg font-mono font-bold text-foreground flex-1">
+                    {referralData.code}
+                  </code>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    navigator.clipboard.writeText(referralData.code!);
+                    toast({ title: "Copied!", description: "Referral code copied to clipboard." });
+                  }}>
+                    <Copy className="h-4 w-4 mr-1" /> Copy Code
+                  </Button>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground font-body mt-2">
-                Share your referral link. Earn 100 credits for each student who enrolls!
+              {/* Referral Link */}
+              <div>
+                <p className="text-xs text-muted-foreground font-body mb-1.5">Your Referral Link</p>
+                <div className="flex items-center gap-2">
+                  <code className="bg-muted px-3 py-2 rounded-lg text-sm font-mono text-foreground flex-1 truncate">
+                    {`${window.location.origin}/register?ref=${referralData.code}`}
+                  </code>
+                  <Button variant="outline" size="sm" onClick={copyReferralLink}>
+                    <Copy className="h-4 w-4 mr-1" /> Copy Link
+                  </Button>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground font-body">
+                Share your code or link. Earn <span className="font-semibold text-accent">100 credits</span> for each student who enrolls!
               </p>
             </CardContent>
           </Card>
