@@ -8,7 +8,7 @@ export interface Course {
   completedModules: number;
   enrolled: boolean;
   category: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  level: "Beginner" | "Basic 1" | "Basic 2" | "Intermediate" | "Advanced";
   image?: string;
 }
 

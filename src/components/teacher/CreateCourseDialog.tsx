@@ -65,7 +65,7 @@ const CreateCourseDialog = ({ open, onOpenChange }: Props) => {
               <Select value={level} onValueChange={setLevel}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {["Beginner", "Intermediate", "Advanced"].map((l) => (
+                  {["Beginner", "Basic 1", "Basic 2", "Intermediate", "Advanced"].map((l) => (
                     <SelectItem key={l} value={l}>{l}</SelectItem>
                   ))}
                 </SelectContent>
