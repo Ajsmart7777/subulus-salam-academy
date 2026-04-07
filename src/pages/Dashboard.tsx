@@ -188,15 +188,28 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               {certificates.map((cert: any) => (
-                <div key={cert.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-foreground">{cert.courses?.title ?? "Course"}</p>
-                    <p className="text-xs text-muted-foreground font-body">Certificate #{cert.certificate_number}</p>
+                <Link
+                  key={cert.id}
+                  to={`/certificate/${cert.id}`}
+                  className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full gradient-gold flex items-center justify-center">
+                      <Award className="h-5 w-5 text-accent-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-heading font-medium text-foreground group-hover:text-primary transition-colors">
+                        {cert.courses?.title ?? "Course"}
+                      </p>
+                      <p className="text-xs text-muted-foreground font-body">
+                        #{cert.certificate_number} · {new Date(cert.issued_at).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
-                  <Badge className="bg-primary/10 text-primary text-xs">
-                    {new Date(cert.issued_at).toLocaleDateString()}
-                  </Badge>
-                </div>
+                  <Button variant="outline" size="sm" className="gap-1 text-xs">
+                    View <Award className="h-3 w-3" />
+                  </Button>
+                </Link>
               ))}
             </CardContent>
           </Card>
