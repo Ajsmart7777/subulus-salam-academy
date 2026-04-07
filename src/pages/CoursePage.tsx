@@ -364,12 +364,17 @@ const CoursePage = () => {
         <div className="bg-accent/10 border-b border-accent/20 py-4">
           <div className="container flex items-center gap-3">
             <Award className="h-6 w-6 text-accent" />
-            <div>
+            <div className="flex-1">
               <p className="font-heading font-bold text-foreground">Course Completed! 🎉</p>
               <p className="text-sm text-muted-foreground font-body">
                 Certificate #{certificate.certificate_number} — Issued {new Date(certificate.issued_at).toLocaleDateString()}
               </p>
             </div>
+            <Button variant="gold" size="sm" asChild>
+              <Link to={`/certificate/${certificate.id}`}>
+                <Award className="h-4 w-4 mr-1" /> View Certificate
+              </Link>
+            </Button>
           </div>
         </div>
       )}
