@@ -22,6 +22,7 @@ import AdminCoursesPage from "./pages/admin/AdminCoursesPage";
 import AdminReferralsPage from "./pages/admin/AdminReferralsPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import CertificatePage from "./pages/CertificatePage";
 
 const queryClient = new QueryClient();
 
@@ -92,6 +93,7 @@ const App = () => (
             <Route path="/admin/referrals" element={<ProtectedRoute requiredRole="admin"><AdminReferralsPage /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReportsPage /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSettingsPage /></ProtectedRoute>} />
+            <Route path="/certificate/:certificateId" element={<ProtectedRoute><CertificatePage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
