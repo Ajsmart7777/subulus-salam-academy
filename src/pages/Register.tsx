@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/layout/Navbar";
@@ -6,8 +6,8 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
+import { Mail, CheckCircle } from "lucide-react";
 
 const Register = () => {
   const [searchParams] = useSearchParams();
@@ -18,11 +18,20 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [referral, setReferral] = useState(referralCode);
   const [loading, setLoading] = useState(false);
-  const [otpStep, setOtpStep] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [verifying, setVerifying] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Listen for auth state changes (user clicks confirmation link)
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") {
+        toast({ title: "Email verified! ✓", description: "Welcome to Subulus-Salam Academy." });
+        navigate("/dashboard");
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +45,7 @@ const Register = () => {
           full_name: fullName,
           ...(referral ? { referred_by: referral } : {}),
         },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: window.location.origin + "/dashboard",
       },
     });
     setLoading(false);
@@ -44,34 +53,11 @@ const Register = () => {
     if (error) {
       toast({ title: "Registration failed", description: error.message, variant: "destructive" });
     } else {
-      toast({
-        title: "Verification code sent!",
-        description: "Check your email for the 6-digit code.",
-      });
-      setOtpStep(true);
+      setEmailSent(true);
     }
   };
 
-  const handleVerifyOtp = async () => {
-    if (otp.length !== 6) return;
-    setVerifying(true);
-
-    const { error } = await supabase.auth.verifyOtp({
-      email,
-      token: otp,
-      type: "signup",
-    });
-    setVerifying(false);
-
-    if (error) {
-      toast({ title: "Verification failed", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Email verified! ✓", description: "Welcome to Subulus-Salam Academy." });
-      navigate("/dashboard");
-    }
-  };
-
-  const handleResendOtp = async () => {
+  const handleResendEmail = async () => {
     setLoading(true);
     const { error } = await supabase.auth.resend({
       type: "signup",
@@ -82,7 +68,7 @@ const Register = () => {
     if (error) {
       toast({ title: "Failed to resend", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Code resent!", description: "Check your email for the new code." });
+      toast({ title: "Email resent!", description: "Check your inbox for the confirmation link." });
     }
   };
 
@@ -91,7 +77,7 @@ const Register = () => {
       <Navbar />
       <div className="container max-w-md py-16">
         <div className="bg-card rounded-lg p-8 shadow-card">
-          {!otpStep ? (
+          {!emailSent ? (
             <>
               <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-2">Begin Your Journey</h1>
               <p className="text-sm text-muted-foreground font-body text-center mb-6">
@@ -156,51 +142,43 @@ const Register = () => {
               </p>
             </>
           ) : (
-            <>
-              <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-2">Verify Your Email</h1>
-              <p className="text-sm text-muted-foreground font-body text-center mb-6">
-                Enter the 6-digit code sent to <span className="font-medium text-foreground">{email}</span>
-              </p>
-
-              <div className="flex justify-center mb-6">
-                <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
+            <div className="text-center space-y-4">
+              <div className="flex justify-center">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Mail className="w-8 h-8 text-primary" />
+                </div>
               </div>
-
-              <Button
-                variant="hero"
-                className="w-full mb-3"
-                onClick={handleVerifyOtp}
-                disabled={otp.length !== 6 || verifying}
-              >
-                {verifying ? "Verifying..." : "Verify Email"}
-              </Button>
-
-              <div className="text-center">
-                <button
-                  onClick={handleResendOtp}
-                  disabled={loading}
-                  className="text-sm text-primary font-body hover:underline disabled:opacity-50"
-                >
-                  {loading ? "Sending..." : "Didn't receive the code? Resend"}
-                </button>
+              <h1 className="text-2xl font-heading font-bold text-foreground">Check Your Email</h1>
+              <p className="text-sm text-muted-foreground font-body">
+                We've sent a confirmation link to<br />
+                <span className="font-medium text-foreground">{email}</span>
+              </p>
+              <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground font-body space-y-2">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                  <span>Click the link in your email to verify your account</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                  <span>You'll be automatically redirected once verified</span>
+                </div>
               </div>
 
               <button
-                onClick={() => setOtpStep(false)}
-                className="text-sm text-muted-foreground font-body hover:underline mt-4 block mx-auto"
+                onClick={handleResendEmail}
+                disabled={loading}
+                className="text-sm text-primary font-body hover:underline disabled:opacity-50"
+              >
+                {loading ? "Sending..." : "Didn't receive the email? Resend"}
+              </button>
+
+              <button
+                onClick={() => setEmailSent(false)}
+                className="text-sm text-muted-foreground font-body hover:underline block mx-auto"
               >
                 ← Back to registration
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
