@@ -33,9 +33,9 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container max-w-md py-16">
-        <div className="bg-card rounded-lg p-8 shadow-card">
-          <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-2">{t("login.title")}</h1>
+      <div className="container px-4 sm:px-6 max-w-md py-10 sm:py-16">
+        <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-card border border-border">
+          <h1 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-2">{t("login.title")}</h1>
           <p className="text-sm text-muted-foreground font-body text-center mb-6">
             {t("login.subtitle")}
           </p>
@@ -43,11 +43,11 @@ const Login = () => {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <Label htmlFor="email" className="font-body">{t("login.email")}</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@example.com" required />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@example.com" required className="rounded-xl" />
             </div>
             <div>
               <Label htmlFor="password" className="font-body">{t("login.password")}</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className="rounded-xl" />
             </div>
             <Button type="submit" variant="hero" className="w-full" disabled={loading}>
               {loading ? t("login.loading") : t("login.submit")}

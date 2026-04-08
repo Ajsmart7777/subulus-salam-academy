@@ -13,14 +13,14 @@ import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const StatCard = ({ icon: Icon, label, value, sub }: { icon: any; label: string; value: string | number; sub?: string }) => (
-  <div className="bg-card rounded-lg p-5 shadow-card">
+  <div className="bg-card rounded-xl p-4 sm:p-5 shadow-soft border border-border">
     <div className="flex items-center gap-3 mb-2">
-      <div className="h-10 w-10 rounded-lg gradient-hero flex items-center justify-center">
+      <div className="h-10 w-10 rounded-xl gradient-hero flex items-center justify-center shrink-0">
         <Icon className="h-5 w-5 text-primary-foreground" />
       </div>
-      <div>
-        <p className="text-xs text-muted-foreground font-body">{label}</p>
-        <p className="text-xl font-heading font-bold text-foreground">{value}</p>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground font-body truncate">{label}</p>
+        <p className="text-lg sm:text-xl font-heading font-bold text-foreground">{value}</p>
       </div>
     </div>
     {sub && <p className="text-xs text-muted-foreground font-body">{sub}</p>}
@@ -89,13 +89,13 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground mb-1">{t("dashboard.greeting")}, {displayName}</h1>
-          <p className="text-muted-foreground font-body">{t("dashboard.subtitle")}</p>
+      <div className="container px-4 sm:px-6 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground mb-1">{t("dashboard.greeting")}, {displayName}</h1>
+          <p className="text-muted-foreground font-body text-sm sm:text-base">{t("dashboard.subtitle")}</p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
           <StatCard icon={BookOpen} label={t("dashboard.enrolled")} value={enrolledCourses?.length ?? 0} />
           <StatCard icon={Target} label={t("dashboard.lessons_done")} value={`${totalLessonsCompleted}/${totalLessons}`} />
           <StatCard icon={Gift} label={t("dashboard.referral_credits")} value={referralData?.totalCredits ?? 0} sub={`${referralData?.totalReferrals ?? 0} ${t("dashboard.referrals")}`} />
@@ -103,9 +103,9 @@ const Dashboard = () => {
         </div>
 
         {referralData?.code && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="font-heading flex items-center gap-2">
+          <Card className="mb-6 sm:mb-8">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="font-heading flex items-center gap-2 text-base sm:text-lg">
                 <Gift className="h-5 w-5 text-accent" /> {t("dashboard.your_referral")}
               </CardTitle>
             </CardHeader>
@@ -113,18 +113,18 @@ const Dashboard = () => {
               <div>
                 <p className="text-xs text-muted-foreground font-body mb-1.5">{t("dashboard.referral_code")}</p>
                 <div className="flex items-center gap-2">
-                  <code className="bg-muted px-4 py-2 rounded-lg text-lg font-mono font-bold text-foreground flex-1">{referralData.code}</code>
+                  <code className="bg-muted px-3 sm:px-4 py-2 rounded-lg text-base sm:text-lg font-mono font-bold text-foreground flex-1 truncate">{referralData.code}</code>
                   <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(referralData.code!); toast({ title: t("dashboard.copied") }); }}>
-                    <Copy className="h-4 w-4 mr-1" /> {t("dashboard.copy_code")}
+                    <Copy className="h-4 w-4 sm:mr-1" /> <span className="hidden sm:inline">{t("dashboard.copy_code")}</span>
                   </Button>
                 </div>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground font-body mb-1.5">{t("dashboard.referral_link")}</p>
                 <div className="flex items-center gap-2">
-                  <code className="bg-muted px-3 py-2 rounded-lg text-sm font-mono text-foreground flex-1 truncate">{`${window.location.origin}/register?ref=${referralData.code}`}</code>
+                  <code className="bg-muted px-3 py-2 rounded-lg text-xs sm:text-sm font-mono text-foreground flex-1 truncate">{`${window.location.origin}/register?ref=${referralData.code}`}</code>
                   <Button variant="outline" size="sm" onClick={copyReferralLink}>
-                    <Copy className="h-4 w-4 mr-1" /> {t("dashboard.copy_link")}
+                    <Copy className="h-4 w-4 sm:mr-1" /> <span className="hidden sm:inline">{t("dashboard.copy_link")}</span>
                   </Button>
                 </div>
               </div>
@@ -136,25 +136,25 @@ const Dashboard = () => {
         )}
 
         {certificates && certificates.length > 0 && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="font-heading flex items-center gap-2">
+          <Card className="mb-6 sm:mb-8">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="font-heading flex items-center gap-2 text-base sm:text-lg">
                 <Award className="h-5 w-5 text-accent" /> {t("dashboard.your_certs")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {certificates.map((cert: any) => (
-                <Link key={cert.id} to={`/certificate/${cert.id}`} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors group">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full gradient-gold flex items-center justify-center">
+                <Link key={cert.id} to={`/certificate/${cert.id}`} className="flex items-center justify-between p-3 sm:p-4 bg-muted/50 rounded-xl hover:bg-muted transition-colors group gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="h-10 w-10 rounded-full gradient-gold flex items-center justify-center shrink-0">
                       <Award className="h-5 w-5 text-accent-foreground" />
                     </div>
-                    <div>
-                      <p className="font-heading font-medium text-foreground group-hover:text-primary transition-colors">{cert.courses?.title ?? "Course"}</p>
+                    <div className="min-w-0">
+                      <p className="font-heading font-medium text-foreground group-hover:text-primary transition-colors truncate text-sm sm:text-base">{cert.courses?.title ?? "Course"}</p>
                       <p className="text-xs text-muted-foreground font-body">#{cert.certificate_number} · {new Date(cert.issued_at).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="gap-1 text-xs">{t("dashboard.view")} <Award className="h-3 w-3" /></Button>
+                  <Button variant="outline" size="sm" className="gap-1 text-xs shrink-0">{t("dashboard.view")} <Award className="h-3 w-3" /></Button>
                 </Link>
               ))}
             </CardContent>
@@ -162,7 +162,7 @@ const Dashboard = () => {
         )}
 
         <div className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-foreground mb-4">{t("dashboard.your_courses")}</h2>
+          <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground mb-4">{t("dashboard.your_courses")}</h2>
           {!enrolledCourses?.length ? (
             <Card>
               <CardContent className="py-10 text-center">
@@ -171,25 +171,36 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {enrolledCourses.map((course) => {
-                const progress = course.totalLessons > 0 ? Math.round((course.completedLessons / course.totalLessons) * 100) : 0;
+                const courseProgress = course.totalLessons > 0 ? Math.round((course.completedLessons / course.totalLessons) * 100) : 0;
                 return (
-                  <Link to={`/course/${course.id}`} key={course.id} className="bg-card rounded-lg p-6 shadow-card hover:shadow-elevated transition-shadow group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <Badge className="mb-2 bg-sage-light text-sage-dark font-body text-xs">{course.category}</Badge>
-                        <h3 className="text-lg font-heading font-bold text-foreground group-hover:text-primary transition-colors">{course.title}</h3>
-                        {course.title_ar && <p className="text-xs text-muted-foreground font-body mt-1">{course.title_ar}</p>}
-                      </div>
-                      <Badge variant="outline" className="text-xs font-body">{course.level}</Badge>
+                  <Link to={`/course/${course.id}`} key={course.id} className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 group border border-border">
+                    {/* Course banner */}
+                    <div className="h-28 sm:h-32 overflow-hidden">
+                      {course.image_url ? (
+                        <img src={course.image_url} alt={course.title} className="w-full h-full object-cover rounded-none group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full gradient-hero flex items-center justify-center">
+                          <p className="text-lg font-heading text-primary-foreground/80">{course.title_ar || ""}</p>
+                        </div>
+                      )}
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-body text-muted-foreground">
-                        <span>{course.completedLessons} {t("dashboard.of_lessons", { total: String(course.totalLessons) })}</span>
-                        <span>{progress}%</span>
+                    <div className="p-4 sm:p-5">
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <div className="min-w-0">
+                          <Badge className="mb-1.5 bg-sage-light text-sage-dark font-body text-xs">{course.category}</Badge>
+                          <h3 className="text-base sm:text-lg font-heading font-bold text-foreground group-hover:text-primary transition-colors truncate">{course.title}</h3>
+                        </div>
+                        <Badge variant="outline" className="text-xs font-body shrink-0">{course.level}</Badge>
                       </div>
-                      <Progress value={progress} className="h-2" />
+                      <div className="space-y-2 mt-3">
+                        <div className="flex justify-between text-xs font-body text-muted-foreground">
+                          <span>{course.completedLessons} {t("dashboard.of_lessons", { total: String(course.totalLessons) })}</span>
+                          <span>{courseProgress}%</span>
+                        </div>
+                        <Progress value={courseProgress} className="h-2" />
+                      </div>
                     </div>
                   </Link>
                 );

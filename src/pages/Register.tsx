@@ -65,28 +65,28 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container max-w-md py-16">
-        <div className="bg-card rounded-lg p-8 shadow-card">
+      <div className="container px-4 sm:px-6 max-w-md py-10 sm:py-16">
+        <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-card border border-border">
           {!emailSent ? (
             <>
-              <h1 className="text-2xl font-heading font-bold text-foreground text-center mb-2">{t("register.title")}</h1>
+              <h1 className="text-xl sm:text-2xl font-heading font-bold text-foreground text-center mb-2">{t("register.title")}</h1>
               <p className="text-sm text-muted-foreground font-body text-center mb-6">{t("register.subtitle")}</p>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
                   <Label htmlFor="fullName" className="font-body">{t("register.fullname")}</Label>
-                  <Input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                  <Input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required className="rounded-xl" />
                 </div>
                 <div>
                   <Label htmlFor="email" className="font-body">{t("register.email")}</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@example.com" required />
+                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@example.com" required className="rounded-xl" />
                 </div>
                 <div>
                   <Label htmlFor="password" className="font-body">{t("register.password")}</Label>
-                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" minLength={6} required />
+                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" minLength={6} required className="rounded-xl" />
                 </div>
                 <div>
                   <Label htmlFor="referral" className="font-body">{t("register.referral")}</Label>
-                  <Input id="referral" type="text" value={referral} onChange={(e) => setReferral(e.target.value)} placeholder="e.g. SJ-abc12345" />
+                  <Input id="referral" type="text" value={referral} onChange={(e) => setReferral(e.target.value)} placeholder="e.g. SJ-abc12345" className="rounded-xl" />
                 </div>
                 <Button type="submit" variant="hero" className="w-full" disabled={loading}>
                   {loading ? t("register.loading") : t("register.submit")}
@@ -104,12 +104,12 @@ const Register = () => {
                   <Mail className="w-8 h-8 text-primary" />
                 </div>
               </div>
-              <h1 className="text-2xl font-heading font-bold text-foreground">{t("register.check_email")}</h1>
+              <h1 className="text-xl sm:text-2xl font-heading font-bold text-foreground">{t("register.check_email")}</h1>
               <p className="text-sm text-muted-foreground font-body">
                 {t("register.email_sent")}<br />
                 <span className="font-medium text-foreground">{email}</span>
               </p>
-              <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground font-body space-y-2">
+              <div className="bg-muted/50 rounded-xl p-4 text-sm text-muted-foreground font-body space-y-2">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <span>{t("register.verify_step")}</span>
