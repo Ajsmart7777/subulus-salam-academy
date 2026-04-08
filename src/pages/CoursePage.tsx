@@ -86,8 +86,8 @@ const CoursePage = () => {
 
       return mods.map((m) => ({
         ...m,
-        lessons: (lessonsRes.data ?? []).filter((l) => l.module_id === m.id),
-        assignments: (assignmentsRes.data ?? []).filter((a) => a.module_id === m.id),
+        lessons: (lessonsRes.data ?? []).filter((l: any) => l.module_id === m.id),
+        assignments: (assignmentsRes.data ?? []).filter((a: any) => a.module_id === m.id),
       }));
     },
     enabled: !!courseId,
@@ -98,7 +98,7 @@ const CoursePage = () => {
     queryKey: ["lesson-progress", courseId, user?.id],
     queryFn: async () => {
       if (!modules) return {};
-      const lessonIds = modules.flatMap((m) => m.lessons.map((l) => l.id));
+      const lessonIds = modules.flatMap((m) => (m.lessons ?? []).map((l) => l.id));
       if (!lessonIds.length) return {};
       const { data } = await supabase
         .from("lesson_progress")
@@ -117,7 +117,7 @@ const CoursePage = () => {
     queryKey: ["assignment-submissions", courseId, user?.id],
     queryFn: async () => {
       if (!modules) return {};
-      const assignmentIds = modules.flatMap((m) => m.assignments.map((a) => a.id));
+      const assignmentIds = modules.flatMap((m) => (m.assignments ?? []).map((a) => a.id));
       if (!assignmentIds.length) return {};
       const { data } = await supabase
         .from("assignment_submissions")
@@ -246,20 +246,22 @@ const CoursePage = () => {
     if (!modules || !progress || !submissions) return false;
 
     const prevModule = modules[moduleIndex - 1];
-    // All lessons completed?
-    const allLessonsComplete = prevModule.lessons.every((l) => progress[l.id]);
-    // All assignments submitted?
-    const allAssignmentsComplete = prevModule.assignments.length === 0 ||
-      prevModule.assignments.every((a) => submissions[a.id]);
+    const prevLessons = prevModule.lessons ?? [];
+    const prevAssignments = prevModule.assignments ?? [];
+    const allLessonsComplete = prevLessons.every((l) => progress[l.id]);
+    const allAssignmentsComplete = prevAssignments.length === 0 ||
+      prevAssignments.every((a) => submissions[a.id]);
 
     return allLessonsComplete && allAssignmentsComplete;
   };
 
   const isModuleComplete = (mod: any): boolean => {
     if (!progress || !submissions) return false;
-    const allLessons = mod.lessons.every((l: any) => progress[l.id]);
-    const allAssignments = mod.assignments.length === 0 ||
-      mod.assignments.every((a: any) => submissions[a.id]);
+    const lessons = mod.lessons ?? [];
+    const assignments = mod.assignments ?? [];
+    const allLessons = lessons.every((l: any) => progress[l.id]);
+    const allAssignments = assignments.length === 0 ||
+      assignments.every((a: any) => submissions[a.id]);
     return allLessons && allAssignments;
   };
 
@@ -443,7 +445,7 @@ const CoursePage = () => {
                   ) : (
                     <>
                       <div className="space-y-2 mb-4">
-                        {mod.lessons.map((lesson) => {
+                        {(mod.lessons ?? []).map((lesson) => {
                           const LIcon = lessonIcon(lesson.type);
                           const lessonDone = progress?.[lesson.id] ?? false;
                           return (
@@ -474,11 +476,11 @@ const CoursePage = () => {
                             <span className="text-muted-foreground">Quiz</span>
                           </div>
                         )}
-                        {mod.assignments.length > 0 && (
+                        {(mod.assignments ?? []).length > 0 && (
                           <div className="flex items-center gap-1.5 text-xs font-body">
-                            <ClipboardList className={`h-4 w-4 ${mod.assignments.every((a) => submissions?.[a.id]) ? "text-primary" : "text-muted-foreground"}`} />
-                            <span className={mod.assignments.every((a) => submissions?.[a.id]) ? "text-primary" : "text-muted-foreground"}>
-                              Assignment {mod.assignments.every((a) => submissions?.[a.id]) ? "✓" : ""}
+                            <ClipboardList className={`h-4 w-4 ${(mod.assignments ?? []).every((a) => submissions?.[a.id]) ? "text-primary" : "text-muted-foreground"}`} />
+                            <span className={(mod.assignments ?? []).every((a) => submissions?.[a.id]) ? "text-primary" : "text-muted-foreground"}>
+                              Assignment {(mod.assignments ?? []).every((a) => submissions?.[a.id]) ? "✓" : ""}
                             </span>
                           </div>
                         )}
