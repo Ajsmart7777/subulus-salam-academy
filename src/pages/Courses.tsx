@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Courses = () => {
+  const { t } = useLanguage();
   const { data: courses, isLoading } = useQuery({
     queryKey: ["published-courses"],
     queryFn: async () => {
@@ -25,8 +27,8 @@ const Courses = () => {
       <Navbar />
       <div className="container py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-foreground mb-2">Courses</h1>
-          <p className="text-muted-foreground font-body">Explore our structured Islamic curriculum.</p>
+          <h1 className="text-3xl font-heading font-bold text-foreground mb-2">{t("courses.title")}</h1>
+          <p className="text-muted-foreground font-body">{t("courses.subtitle")}</p>
         </div>
 
         {isLoading ? (
@@ -34,7 +36,7 @@ const Courses = () => {
             <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : !courses?.length ? (
-          <p className="text-center text-muted-foreground py-20 font-body">No courses available yet.</p>
+          <p className="text-center text-muted-foreground py-20 font-body">{t("courses.none")}</p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
@@ -50,7 +52,7 @@ const Courses = () => {
                   <h3 className="text-lg font-heading font-bold text-foreground mb-1">{course.title}</h3>
                   <p className="text-sm text-muted-foreground font-body mb-4 flex-1 line-clamp-2">{course.description}</p>
                   <Button variant="hero" size="sm" asChild>
-                    <Link to={`/course/${course.id}`}>View Course</Link>
+                    <Link to={`/course/${course.id}`}>{t("courses.view")}</Link>
                   </Button>
                 </div>
               </div>
