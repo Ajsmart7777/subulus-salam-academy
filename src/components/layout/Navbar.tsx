@@ -32,7 +32,7 @@ const Navbar = () => {
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2">
           <img src={logoIcon} alt="Sabilul Jannah" className="h-10 w-10 rounded-md" width={512} height={512} />
-          <span className="font-heading text-xl font-bold text-foreground">Sabilul Jannah</span>
+          <span className="font-heading text-lg font-bold text-foreground leading-tight">Sabilul Jannah <span className="hidden lg:inline text-sm font-normal text-muted-foreground">International Online Islamiyya</span></span>
         </Link>
 
         {/* Desktop nav */}

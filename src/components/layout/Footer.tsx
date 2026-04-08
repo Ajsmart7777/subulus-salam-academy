@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container">
         <div className="grid md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-heading text-lg font-bold text-foreground mb-3">Sabilul Jannah</h3>
+            <h3 className="font-heading text-lg font-bold text-foreground mb-3">Sabilul Jannah International Online Islamiyya</h3>
             <p className="text-sm text-muted-foreground font-body leading-relaxed">
               {t("footer.description")}
             </p>
