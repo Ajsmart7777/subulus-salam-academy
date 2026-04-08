@@ -56,7 +56,7 @@ const CertificatePage = () => {
     const shareUrl = window.location.href;
     if (navigator.share) {
       try {
-        await navigator.share({ title: `Certificate - ${course?.title}`, text: `I completed "${course?.title}" at Sabilul Jannah Academy!`, url: shareUrl });
+        await navigator.share({ title: `Certificate - ${course?.title}`, text: `I completed "${course?.title}" at Sabilul Jannah International Online Islamiyya!`, url: shareUrl });
       } catch {}
     } else {
       await navigator.clipboard.writeText(shareUrl);
@@ -78,20 +78,20 @@ const CertificatePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container py-8">
+      <div className="container px-4 sm:px-6 py-6 sm:py-8">
         <Link to={`/course/${certificate.course_id}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 font-body">
           <ArrowLeft className="h-4 w-4" /> {t("cert.back_course")}
         </Link>
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-heading font-bold text-foreground">{t("cert.title")}</h1>
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">{t("cert.title")}</h1>
           <p className="text-muted-foreground font-body mt-1">{t("cert.congratulations")}</p>
         </div>
-        <div className="flex justify-center gap-3 mb-8">
+        <div className="flex flex-col sm:flex-row justify-center gap-3 mb-8">
           <Button variant="hero" onClick={handleDownload} className="gap-2"><Download className="h-4 w-4" /> {t("cert.download")}</Button>
           <Button variant="gold" onClick={handleShare} className="gap-2"><Share2 className="h-4 w-4" /> {t("cert.share")}</Button>
         </div>
         <div className="flex justify-center overflow-x-auto pb-8">
-          <div className="shadow-elevated rounded-lg overflow-hidden">
+          <div className="shadow-elevated rounded-xl overflow-hidden">
             <CertificateTemplate ref={certRef} studentName={studentName} courseName={course?.title ?? ""} courseNameAr={course?.title_ar ?? undefined} certificateNumber={certificate.certificate_number} issuedDate={issuedDate} />
           </div>
         </div>

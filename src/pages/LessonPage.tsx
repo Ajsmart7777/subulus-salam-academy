@@ -84,30 +84,30 @@ const LessonPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container py-8 max-w-4xl">
+      <div className="container px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
         <Link to={`/course/${courseId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary font-body mb-6">
           <ArrowLeft className="h-4 w-4" /> {t("lesson.back")}
         </Link>
 
         <div className="mb-6">
           <p className="text-xs text-muted-foreground font-body mb-1">{t("course.week")} {module?.week} · {module?.title}</p>
-          <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">{data.title}</h1>
-          <div className="flex items-center gap-3">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">{data.title}</h1>
+          <div className="flex items-center gap-3 flex-wrap">
             <Badge variant="outline" className="text-xs font-body capitalize">{data.type}</Badge>
             <span className="text-xs text-muted-foreground font-body">{data.duration}</span>
           </div>
         </div>
 
         {data.content_text ? (
-          <div className="prose prose-sm max-w-none bg-card rounded-lg border border-border p-6 mb-8 shadow-card font-body">
+          <div className="prose prose-sm max-w-none bg-card rounded-xl border border-border p-4 sm:p-6 mb-8 shadow-soft font-body">
             <div dangerouslySetInnerHTML={{ __html: data.content_text }} />
           </div>
         ) : data.content_url ? (
-          <div className="rounded-lg bg-card border border-border aspect-video flex items-center justify-center mb-8 shadow-card overflow-hidden">
+          <div className="rounded-xl bg-card border border-border aspect-video flex items-center justify-center mb-8 shadow-soft overflow-hidden">
             <iframe src={data.content_url} className="w-full h-full" allowFullScreen />
           </div>
         ) : (
-          <div className="rounded-lg bg-card border border-border aspect-video flex items-center justify-center mb-8 shadow-card">
+          <div className="rounded-xl bg-card border border-border aspect-video flex items-center justify-center mb-8 shadow-soft">
             <div className="text-center">
               <div className="h-16 w-16 rounded-full gradient-hero flex items-center justify-center mx-auto mb-3">
                 <svg className="h-8 w-8 text-primary-foreground" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
@@ -126,10 +126,10 @@ const LessonPage = () => {
           <Button variant="outline" className="gap-2"><MessageCircle className="h-4 w-4" /> {t("lesson.ai_assistant")}</Button>
         </div>
 
-        <div className="bg-card rounded-lg p-6 shadow-card mb-8">
+        <div className="bg-card rounded-xl p-4 sm:p-6 shadow-soft border border-border mb-8">
           <h3 className="font-heading font-bold text-foreground mb-3">{t("lesson.notes")}</h3>
           <textarea
-            className="w-full min-h-[120px] bg-background rounded-md border border-input p-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+            className="w-full min-h-[120px] bg-background rounded-xl border border-input p-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y"
             placeholder={t("lesson.notes_placeholder")}
           />
         </div>

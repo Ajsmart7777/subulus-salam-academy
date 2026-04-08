@@ -207,49 +207,62 @@ const CoursePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="gradient-hero py-12">
-        <div className="container">
-          <div className="flex items-center gap-2 mb-3">
-            <Badge className="bg-primary-foreground/20 text-primary-foreground font-body text-xs">{course.category}</Badge>
-            <Badge className="bg-primary-foreground/20 text-primary-foreground font-body text-xs">{course.level}</Badge>
-            {!isFree && <Badge className="bg-accent text-accent-foreground font-body text-xs">₦{coursePrice.toLocaleString()}</Badge>}
+
+      {/* Course Hero with banner */}
+      <div className="relative">
+        {course.image_url ? (
+          <div className="absolute inset-0 h-full">
+            <img src={course.image_url} alt="" className="w-full h-full object-cover rounded-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[hsl(160_75%_15%)] via-[hsl(160_72%_21%/0.85)] to-[hsl(160_72%_21%/0.7)]" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-primary-foreground mb-1">{course.title}</h1>
-          {course.title_ar && <p className="text-lg font-heading text-primary-foreground/80 mb-3">{course.title_ar}</p>}
-          <p className="text-sm text-primary-foreground/70 font-body mb-6 max-w-2xl">{course.description}</p>
+        ) : (
+          <div className="absolute inset-0 gradient-hero" />
+        )}
 
-          {isEnrolled && (
-            <div className="max-w-sm">
-              <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
-                <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+        <div className="relative py-10 sm:py-12">
+          <div className="container px-4 sm:px-6">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <Badge className="bg-primary-foreground/20 text-primary-foreground font-body text-xs">{course.category}</Badge>
+              <Badge className="bg-primary-foreground/20 text-primary-foreground font-body text-xs">{course.level}</Badge>
+              {!isFree && <Badge className="bg-accent text-accent-foreground font-body text-xs">₦{coursePrice.toLocaleString()}</Badge>}
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-primary-foreground mb-1">{course.title}</h1>
+            {course.title_ar && <p className="text-base sm:text-lg font-arabic text-primary-foreground/80 mb-3">{course.title_ar}</p>}
+            <p className="text-sm text-primary-foreground/70 font-body mb-6 max-w-2xl">{course.description}</p>
+
+            {isEnrolled && (
+              <div className="max-w-sm">
+                <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
+                  <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+                </div>
+                <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
               </div>
-              <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
-            </div>
-          )}
+            )}
 
-          {!isEnrolled && user && (
-            <div className="mt-4">
-              {isFree ? (
-                <Button variant="hero" onClick={() => enrollMutation.mutate()} disabled={enrollMutation.isPending}>
-                  {enrollMutation.isPending ? t("course.enrolling") : t("course.enroll_free")}
-                </Button>
-              ) : (
-                <Button variant="hero" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
-                  <CreditCard className="h-4 w-4" />
-                  {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
-                </Button>
-              )}
-            </div>
-          )}
+            {!isEnrolled && user && (
+              <div className="mt-4">
+                {isFree ? (
+                  <Button variant="gold" size="lg" onClick={() => enrollMutation.mutate()} disabled={enrollMutation.isPending}>
+                    {enrollMutation.isPending ? t("course.enrolling") : t("course.enroll_free")}
+                  </Button>
+                ) : (
+                  <Button variant="gold" size="lg" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
+                    <CreditCard className="h-4 w-4" />
+                    {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
+                  </Button>
+                )}
+              </div>
+            )}
 
-          {!user && <Button variant="hero" className="mt-4" asChild><Link to="/register">{t("course.signup_enroll")}</Link></Button>}
+            {!user && <Button variant="gold" size="lg" className="mt-4" asChild><Link to="/register">{t("course.signup_enroll")}</Link></Button>}
+          </div>
         </div>
       </div>
 
       {certificate && (
         <div className="bg-accent/10 border-b border-accent/20 py-4">
-          <div className="container flex items-center gap-3">
-            <Award className="h-6 w-6 text-accent" />
+          <div className="container px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <Award className="h-6 w-6 text-accent shrink-0" />
             <div className="flex-1">
               <p className="font-heading font-bold text-foreground">{t("course.completed_banner")}</p>
               <p className="text-sm text-muted-foreground font-body">
@@ -265,8 +278,8 @@ const CoursePage = () => {
 
       {isCourseComplete && !certificate && isEnrolled && (
         <div className="bg-accent/10 border-b border-accent/20 py-4">
-          <div className="container flex items-center gap-3">
-            <Award className="h-6 w-6 text-accent" />
+          <div className="container px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <Award className="h-6 w-6 text-accent shrink-0" />
             <div className="flex-1">
               <p className="font-heading font-bold text-foreground">{t("course.all_complete")}</p>
               <p className="text-sm text-muted-foreground font-body">{t("course.claim_cert")}</p>
@@ -278,25 +291,25 @@ const CoursePage = () => {
         </div>
       )}
 
-      <div className="container py-8">
-        <h2 className="text-2xl font-heading font-bold text-foreground mb-6">{t("course.weekly_modules")}</h2>
+      <div className="container px-4 sm:px-6 py-8">
+        <h2 className="text-xl sm:text-2xl font-heading font-bold text-foreground mb-6">{t("course.weekly_modules")}</h2>
         <div className="space-y-4">
           {modules?.map((mod, index) => {
             const unlocked = isEnrolled && isModuleUnlocked(index);
             const completed = isModuleComplete(mod);
             return (
-              <div key={mod.id} className={`rounded-lg border ${!unlocked ? "border-border bg-muted/50 opacity-70" : "border-border bg-card shadow-card"}`}>
-                <div className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {!unlocked ? <Lock className="h-5 w-5 text-muted-foreground" /> : completed ? <CheckCircle2 className="h-5 w-5 text-primary" /> : <Circle className="h-5 w-5 text-accent" />}
-                      <div>
+              <div key={mod.id} className={`rounded-xl border ${!unlocked ? "border-border bg-muted/50 opacity-70" : "border-border bg-card shadow-soft"}`}>
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-center justify-between mb-3 gap-2">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {!unlocked ? <Lock className="h-5 w-5 text-muted-foreground shrink-0" /> : completed ? <CheckCircle2 className="h-5 w-5 text-primary shrink-0" /> : <Circle className="h-5 w-5 text-accent shrink-0" />}
+                      <div className="min-w-0">
                         <p className="text-xs text-muted-foreground font-body">{t("course.week")} {mod.week}</p>
-                        <h3 className="font-heading font-bold text-foreground">{mod.title}</h3>
+                        <h3 className="font-heading font-bold text-foreground truncate">{mod.title}</h3>
                       </div>
                     </div>
-                    {!unlocked && <Badge variant="outline" className="text-xs font-body text-muted-foreground"><Lock className="h-3 w-3 mr-1" /> {t("course.locked")}</Badge>}
-                    {completed && <Badge className="bg-primary/10 text-primary text-xs font-body"><CheckCircle2 className="h-3 w-3 mr-1" /> {t("course.complete")}</Badge>}
+                    {!unlocked && <Badge variant="outline" className="text-xs font-body text-muted-foreground shrink-0"><Lock className="h-3 w-3 mr-1" /> {t("course.locked")}</Badge>}
+                    {completed && <Badge className="bg-primary/10 text-primary text-xs font-body shrink-0"><CheckCircle2 className="h-3 w-3 mr-1" /> {t("course.complete")}</Badge>}
                   </div>
 
                   {!unlocked ? (
@@ -308,16 +321,16 @@ const CoursePage = () => {
                           const LIcon = lessonIcon(lesson.type);
                           const lessonDone = progress?.[lesson.id] ?? false;
                           return (
-                            <Link to={`/course/${courseId}/lesson/${lesson.id}`} key={lesson.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group">
-                              <LIcon className={`h-4 w-4 ${lessonDone ? "text-primary" : "text-muted-foreground"}`} />
-                              <span className={`flex-1 text-sm font-body ${lessonDone ? "text-foreground" : "text-muted-foreground"}`}>{lesson.title}</span>
-                              <span className="text-xs text-muted-foreground font-body">{lesson.duration}</span>
-                              {lessonDone ? <CheckCircle2 className="h-4 w-4 text-primary" /> : <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />}
+                            <Link to={`/course/${courseId}/lesson/${lesson.id}`} key={lesson.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group">
+                              <LIcon className={`h-4 w-4 shrink-0 ${lessonDone ? "text-primary" : "text-muted-foreground"}`} />
+                              <span className={`flex-1 text-sm font-body min-w-0 truncate ${lessonDone ? "text-foreground" : "text-muted-foreground"}`}>{lesson.title}</span>
+                              <span className="text-xs text-muted-foreground font-body hidden sm:block">{lesson.duration}</span>
+                              {lessonDone ? <CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> : <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0" />}
                             </Link>
                           );
                         })}
                       </div>
-                      <div className="flex gap-3 pt-3 border-t border-border">
+                      <div className="flex flex-wrap gap-3 pt-3 border-t border-border">
                         {mod.has_quiz && (
                           <div className="flex items-center gap-1.5 text-xs font-body">
                             <HelpCircle className="h-4 w-4 text-muted-foreground" /><span className="text-muted-foreground">{t("course.quiz")}</span>
