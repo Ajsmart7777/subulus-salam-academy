@@ -31,6 +31,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Courses",
     "hero.stat_students": "Students",
     "hero.stat_scholars": "Scholars",
+    "hero.search_placeholder": "Search for courses...",
+    "hero.search_btn": "Find Course",
 
     // Features
     "features.label": "Why Sabilul Jannah International Online Islamiyya",
