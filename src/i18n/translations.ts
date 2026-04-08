@@ -74,6 +74,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "login.loading": "Signing in...",
     "login.no_account": "Don't have an account?",
     "login.failed": "Login failed",
+    "login.google": "Continue with Google",
+    "login.or": "or",
+    "register.google": "Sign up with Google",
 
     // Register
     "register.title": "Begin Your Journey",
@@ -244,6 +247,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "login.loading": "Ana shiga...",
     "login.no_account": "Ba ka da asusu?",
     "login.failed": "Shigar ta gaza",
+    "login.google": "Ci gaba da Google",
+    "login.or": "ko",
+    "register.google": "Yi rajista da Google",
 
     // Register
     "register.title": "Fara Tafiyarka",
@@ -414,6 +420,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "login.loading": "Ina naata...",
     "login.no_account": "A walaa konte?",
     "login.failed": "Naatugol ronkii",
+    "login.google": "Jokku e Google",
+    "login.or": "maa",
+    "register.google": "Winndito e Google",
 
     // Register
     "register.title": "Fuɗɗo Jahaangal Maa",
@@ -584,6 +593,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "login.loading": "جارٍ الدخول...",
     "login.no_account": "ليس لديك حساب؟",
     "login.failed": "فشل تسجيل الدخول",
+    "login.google": "المتابعة مع جوجل",
+    "login.or": "أو",
+    "register.google": "التسجيل بحساب جوجل",
 
     // Register
     "register.title": "ابدأ رحلتك",
