@@ -57,14 +57,14 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         </div>
 
         {/* Bottom-right green curved corner */}
-        <div className="absolute bottom-0 right-0 w-[280px] h-[200px] overflow-hidden">
+        <div className="absolute bottom-0 right-0 w-[200px] h-[140px] overflow-hidden">
           <div
-            className="absolute w-[500px] h-[400px]"
+            className="absolute w-[400px] h-[320px]"
             style={{
               background: "linear-gradient(315deg, #1a4d2e 0%, #2D5A3D 40%, #3a7a52 100%)",
               borderRadius: "100% 0 0 0",
-              bottom: "-200px",
-              right: "-220px",
+              bottom: "-180px",
+              right: "-200px",
             }}
           />
         </div>
