@@ -371,6 +371,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Jannde",
     "hero.stat_students": "Janngooɓe",
     "hero.stat_scholars": "Moodibaaɓe",
+    "hero.search_placeholder": "Yiylo jannde...",
+    "hero.search_btn": "Yiylo",
 
     // Features
     "features.label": "Ko Waɗi Sabilul Jannah International Online Islamiyya",
@@ -539,6 +541,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "دورات",
     "hero.stat_students": "طلاب",
     "hero.stat_scholars": "علماء",
+    "hero.search_placeholder": "ابحث عن دورات...",
+    "hero.search_btn": "ابحث",
 
     // Features
     "features.label": "لماذا سبيل الجنة الإسلامية الدولية",
