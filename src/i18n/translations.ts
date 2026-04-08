@@ -31,6 +31,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Courses",
     "hero.stat_students": "Students",
     "hero.stat_scholars": "Scholars",
+    "hero.search_placeholder": "Search for courses...",
+    "hero.search_btn": "Find Course",
 
     // Features
     "features.label": "Why Sabilul Jannah International Online Islamiyya",
@@ -199,6 +201,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Darussa",
     "hero.stat_students": "Ɗalibai",
     "hero.stat_scholars": "Malamai",
+    "hero.search_placeholder": "Nemo darussa...",
+    "hero.search_btn": "Nemo",
 
     // Features
     "features.label": "Me Ya Sa Sabilul Jannah International Online Islamiyya",
@@ -367,6 +371,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Jannde",
     "hero.stat_students": "Janngooɓe",
     "hero.stat_scholars": "Moodibaaɓe",
+    "hero.search_placeholder": "Yiylo jannde...",
+    "hero.search_btn": "Yiylo",
 
     // Features
     "features.label": "Ko Waɗi Sabilul Jannah International Online Islamiyya",
@@ -535,6 +541,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "دورات",
     "hero.stat_students": "طلاب",
     "hero.stat_scholars": "علماء",
+    "hero.search_placeholder": "ابحث عن دورات...",
+    "hero.search_btn": "ابحث",
 
     // Features
     "features.label": "لماذا سبيل الجنة الإسلامية الدولية",
