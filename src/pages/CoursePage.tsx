@@ -146,7 +146,7 @@ const CoursePage = () => {
           public_key: flw_public_key, tx_ref: flw_ref, amount: coursePrice, currency: "NGN",
           payment_options: "card,banktransfer,ussd",
           customer: { email: user.email ?? "" },
-          customizations: { title: "Sabilul Jannah Academy", description: `Enrollment: ${course?.title}`, logo: "" },
+          customizations: { title: "Sabilul Jannah International Online Islamiyya", description: `Enrollment: ${course?.title}`, logo: "" },
           callback: async (response: any) => {
             try {
               const { data: verifyData } = await supabase.functions.invoke("handle-payment", {

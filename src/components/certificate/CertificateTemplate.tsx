@@ -96,11 +96,8 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           {/* Academy name */}
           <div className="mb-1">
             <h2 className="text-[#2D5A3D] text-sm font-bold tracking-[0.3em] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
-              Sabilul Jannah Academy
+              Sabilul Jannah International Online Islamiyya
             </h2>
-            <p className="text-[#C8A95E] text-xs tracking-[0.15em]" style={{ fontFamily: "'Inter', sans-serif" }}>
-              International Online Islamiyya
-            </p>
           </div>
 
           {/* Divider */}
@@ -153,7 +150,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           <p className="text-[#6B7B6E] text-[10px] mb-3" style={{ fontFamily: "'Inter', sans-serif" }}>
-            offered by Sabilul Jannah Academy
+            offered by Sabilul Jannah International Online Islamiyya
           </p>
 
           {/* Footer details */}
