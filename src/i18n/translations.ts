@@ -28,6 +28,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.hadith": '"Whoever follows a path in pursuit of knowledge, Allah will make easy for him a path to Paradise."',
     "hero.cta_primary": "Begin Your Journey",
     "hero.cta_secondary": "Explore Courses",
+    "hero.stat_courses": "Courses",
+    "hero.stat_students": "Students",
+    "hero.stat_scholars": "Scholars",
 
     // Features
     "features.label": "Why Sabilul Jannah International Online Islamiyya",
@@ -193,6 +196,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.hadith": '"Duk wanda ya bi hanyar neman ilimi, Allah zai sauƙaƙe masa hanya zuwa Aljanna."',
     "hero.cta_primary": "Fara Tafiyarka",
     "hero.cta_secondary": "Duba Darussa",
+    "hero.stat_courses": "Darussa",
+    "hero.stat_students": "Ɗalibai",
+    "hero.stat_scholars": "Malamai",
 
     // Features
     "features.label": "Me Ya Sa Sabilul Jannah International Online Islamiyya",
@@ -358,6 +364,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.hadith": '"Mo tewti laawol e nder ɗaɓɓugol ganndal, Allah heyɗinanta mo laawol feewde Aljanna."',
     "hero.cta_primary": "Fuɗɗo Jahaangal Maa",
     "hero.cta_secondary": "Ƴeewto Jannde",
+    "hero.stat_courses": "Jannde",
+    "hero.stat_students": "Janngooɓe",
+    "hero.stat_scholars": "Moodibaaɓe",
 
     // Features
     "features.label": "Ko Waɗi Sabilul Jannah International Online Islamiyya",
@@ -523,6 +532,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.hadith": '"من سلك طريقاً يلتمس فيه علماً سهّل الله له به طريقاً إلى الجنة."',
     "hero.cta_primary": "ابدأ رحلتك",
     "hero.cta_secondary": "تصفح الدورات",
+    "hero.stat_courses": "دورات",
+    "hero.stat_students": "طلاب",
+    "hero.stat_scholars": "علماء",
 
     // Features
     "features.label": "لماذا سبيل الجنة الإسلامية الدولية",
