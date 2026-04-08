@@ -201,6 +201,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.stat_courses": "Darussa",
     "hero.stat_students": "Ɗalibai",
     "hero.stat_scholars": "Malamai",
+    "hero.search_placeholder": "Nemo darussa...",
+    "hero.search_btn": "Nemo",
 
     // Features
     "features.label": "Me Ya Sa Sabilul Jannah International Online Islamiyya",
