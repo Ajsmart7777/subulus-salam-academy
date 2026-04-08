@@ -1,24 +1,30 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Globe } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { localeNames, Locale } from "@/i18n/translations";
 import logoIcon from "@/assets/logo-icon.png";
-
-const baseLinks = [
-  { label: "Home", to: "/" },
-  { label: "Courses", to: "/courses" },
-  { label: "Dashboard", to: "/dashboard" },
-];
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, signOut, loading, hasRole } = useAuth();
+  const { t, locale, setLocale } = useLanguage();
+
   const navLinks = [
-    ...baseLinks,
-    ...(hasRole("teacher") ? [{ label: "Teacher Panel", to: "/teacher" }] : []),
-    ...(hasRole("admin") ? [{ label: "Admin Panel", to: "/admin" }] : []),
+    { label: t("nav.home"), to: "/" },
+    { label: t("nav.courses"), to: "/courses" },
+    { label: t("nav.dashboard"), to: "/dashboard" },
+    ...(hasRole("teacher") ? [{ label: t("nav.teacher_panel"), to: "/teacher" }] : []),
+    ...(hasRole("admin") ? [{ label: t("nav.admin_panel"), to: "/admin" }] : []),
   ];
 
   return (
@@ -45,18 +51,39 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          {/* Language Switcher */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="gap-1.5">
+                <Globe className="h-4 w-4" />
+                <span className="text-xs">{localeNames[locale]}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {(Object.keys(localeNames) as Locale[]).map((l) => (
+                <DropdownMenuItem
+                  key={l}
+                  onClick={() => setLocale(l)}
+                  className={locale === l ? "bg-primary/10 font-semibold" : ""}
+                >
+                  {localeNames[l]}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {!loading && (
             user ? (
               <Button variant="ghost" size="sm" className="gap-2" onClick={signOut}>
-                <LogOut className="h-4 w-4" /> Sign Out
+                <LogOut className="h-4 w-4" /> {t("nav.signout")}
               </Button>
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">Log In</Link>
+                  <Link to="/login">{t("nav.login")}</Link>
                 </Button>
                 <Button variant="hero" size="sm" asChild>
-                  <Link to="/register">Sign Up</Link>
+                  <Link to="/register">{t("nav.signup")}</Link>
                 </Button>
               </>
             )
@@ -82,18 +109,34 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Mobile Language Switcher */}
+          <div className="flex flex-wrap gap-2 py-2 border-t border-border">
+            {(Object.keys(localeNames) as Locale[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => { setLocale(l); setMobileOpen(false); }}
+                className={`text-xs px-3 py-1.5 rounded-full border font-body ${
+                  locale === l ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground"
+                }`}
+              >
+                {localeNames[l]}
+              </button>
+            ))}
+          </div>
+
           <div className="flex gap-3 pt-2">
             {user ? (
               <Button variant="ghost" size="sm" className="flex-1 gap-2" onClick={() => { signOut(); setMobileOpen(false); }}>
-                <LogOut className="h-4 w-4" /> Sign Out
+                <LogOut className="h-4 w-4" /> {t("nav.signout")}
               </Button>
             ) : (
               <>
                 <Button variant="ghost" size="sm" className="flex-1" asChild>
-                  <Link to="/login" onClick={() => setMobileOpen(false)}>Log In</Link>
+                  <Link to="/login" onClick={() => setMobileOpen(false)}>{t("nav.login")}</Link>
                 </Button>
                 <Button variant="hero" size="sm" className="flex-1" asChild>
-                  <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                  <Link to="/register" onClick={() => setMobileOpen(false)}>{t("nav.signup")}</Link>
                 </Button>
               </>
             )}
