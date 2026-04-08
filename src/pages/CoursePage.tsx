@@ -86,8 +86,8 @@ const CoursePage = () => {
 
       return mods.map((m) => ({
         ...m,
-        lessons: (lessonsRes.data ?? []).filter((l) => l.module_id === m.id),
-        assignments: (assignmentsRes.data ?? []).filter((a) => a.module_id === m.id),
+        lessons: (lessonsRes.data ?? []).filter((l: any) => l.module_id === m.id),
+        assignments: (assignmentsRes.data ?? []).filter((a: any) => a.module_id === m.id),
       }));
     },
     enabled: !!courseId,
