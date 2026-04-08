@@ -15,7 +15,7 @@ const HeroSection = () => {
       <div className="container relative z-10 py-20">
         <div className="max-w-3xl mx-auto text-center">
           <div className="animate-fade-up flex justify-center mb-6">
-            <img src={logoIcon} alt="Sabilul Jannah" className="h-20 w-20" width={512} height={512} />
+            <img src={logoIcon} alt="Sabilul Jannah" className="h-28 w-28" width={512} height={512} />
           </div>
 
           <p className="animate-fade-up text-sm font-body font-semibold tracking-widest uppercase text-primary mb-4">
