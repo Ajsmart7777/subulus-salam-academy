@@ -17,7 +17,7 @@ const Navbar = () => {
   const { user, signOut, loading, hasRole } = useAuth();
   const navLinks = [
     ...baseLinks,
-    ...(hasRole("teacher") || hasRole("admin") ? [{ label: "Teacher Panel", to: "/teacher" }] : []),
+    ...(hasRole("teacher") ? [{ label: "Teacher Panel", to: "/teacher" }] : []),
     ...(hasRole("admin") ? [{ label: "Admin Panel", to: "/admin" }] : []),
   ];
 
