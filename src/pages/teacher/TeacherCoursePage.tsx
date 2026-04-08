@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Plus, Trash2, ArrowLeft, BookOpen, FileText, PlayCircle, Headphones,
-  ClipboardList, ChevronDown, ChevronRight, Upload, Edit, Loader2, ExternalLink
+  ClipboardList, ChevronDown, ChevronRight, Upload, Edit, Loader2, ExternalLink, ImageIcon
 } from "lucide-react";
 import { useCourseModules, useModuleLessons, useModuleAssignments, useCourseMutations, useTeacherCourses, LessonRow } from "@/hooks/useTeacherCourses";
 import { useState, useRef } from "react";
