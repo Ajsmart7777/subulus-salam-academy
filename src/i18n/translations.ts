@@ -30,7 +30,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.cta_secondary": "Explore Courses",
 
     // Features
-    "features.label": "Why Sabilul Jannah",
+    "features.label": "Why Sabilul Jannah International Online Islamiyya",
     "features.title": "A Real Islamiyya Experience, Online",
     "features.subtitle": "Built on the principles of traditional Islamic schooling with modern tools for today's learners.",
     "feature.curriculum.title": "Structured Curriculum",
@@ -58,7 +58,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.support": "Support",
     "footer.contact": "Contact Us",
     "footer.faq": "FAQ",
-    "footer.rights": "© 2026 Sabilul Jannah. All rights reserved.",
+    "footer.rights": "© 2026 Sabilul Jannah International Online Islamiyya. All rights reserved.",
 
     // Login
     "login.title": "Welcome Back",
@@ -89,7 +89,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "register.back": "← Back to registration",
     "register.failed": "Registration failed",
     "register.email_verified": "Email verified! ✓",
-    "register.welcome": "Welcome to Sabilul Jannah Academy.",
+    "register.welcome": "Welcome to Sabilul Jannah International Online Islamiyya.",
     "register.resent": "Email resent!",
     "register.resent_desc": "Check your inbox for the confirmation link.",
     "register.resend_failed": "Failed to resend",
@@ -195,7 +195,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.cta_secondary": "Duba Darussa",
 
     // Features
-    "features.label": "Me Ya Sa Sabilul Jannah",
+    "features.label": "Me Ya Sa Sabilul Jannah International Online Islamiyya",
     "features.title": "Kwarewa Na Islamiyya Na Gaskiya, A Kan Layi",
     "features.subtitle": "An gina shi bisa ka'idojin makarantar Islamiyya ta gargajiya tare da kayan aiki na zamani ga masu koyo na yau.",
     "feature.curriculum.title": "Manhaja Mai Tsari",
@@ -223,7 +223,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.support": "Tallafi",
     "footer.contact": "Tuntube Mu",
     "footer.faq": "Tambayoyi",
-    "footer.rights": "© 2026 Sabilul Jannah. Haƙƙoƙin duka an kiyaye su.",
+    "footer.rights": "© 2026 Sabilul Jannah International Online Islamiyya. Haƙƙoƙin duka an kiyaye su.",
 
     // Login
     "login.title": "Barka da Komowa",
@@ -254,7 +254,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "register.back": "← Komawa rajista",
     "register.failed": "Rajista ta gaza",
     "register.email_verified": "An tabbatar da imel! ✓",
-    "register.welcome": "Barka da zuwa Sabilul Jannah Academy.",
+    "register.welcome": "Barka da zuwa Sabilul Jannah International Online Islamiyya.",
     "register.resent": "An sake aika imel!",
     "register.resent_desc": "Duba akwatin saƙonka don hanyar tabbatarwa.",
     "register.resend_failed": "Sake aika ya gaza",
@@ -360,7 +360,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.cta_secondary": "Ƴeewto Jannde",
 
     // Features
-    "features.label": "Ko Waɗi Sabilul Jannah",
+    "features.label": "Ko Waɗi Sabilul Jannah International Online Islamiyya",
     "features.title": "Humpito Islamiyya Goongɗinaango, E Nder Laylaytol",
     "features.subtitle": "Mahaaɗo e dow sarɗiiji duɗal Islamiyya aadiiɗo e kuutorɗe kese ɗe hannde.",
     "feature.curriculum.title": "Jannde Nde Seertii",
@@ -388,7 +388,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.support": "Ballal",
     "footer.contact": "Jokkondire",
     "footer.faq": "Naamne",
-    "footer.rights": "© 2026 Sabilul Jannah. Hakkeeji fof ko kiyaaɗi.",
+    "footer.rights": "© 2026 Sabilul Jannah International Online Islamiyya. Hakkeeji fof ko kiyaaɗi.",
 
     // Login
     "login.title": "A Jaaɓii",
@@ -419,7 +419,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "register.back": "← Rutto winndito",
     "register.failed": "Winnditaade ronkii",
     "register.email_verified": "Imel tabbittinii! ✓",
-    "register.welcome": "A jaaɓii e Sabilul Jannah Academy.",
+    "register.welcome": "A jaaɓii e Sabilul Jannah International Online Islamiyya.",
     "register.resent": "Imel neldaama kadi!",
     "register.resent_desc": "Ƴeewto boyet maa ngam haayre tabbittingol.",
     "register.resend_failed": "Neldirgol ronkii",
@@ -525,7 +525,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "hero.cta_secondary": "تصفح الدورات",
 
     // Features
-    "features.label": "لماذا سبيل الجنة",
+    "features.label": "لماذا سبيل الجنة الإسلامية الدولية",
     "features.title": "تجربة إسلامية حقيقية عبر الإنترنت",
     "features.subtitle": "مبنية على مبادئ التعليم الإسلامي التقليدي بأدوات حديثة للمتعلمين اليوم.",
     "feature.curriculum.title": "منهج منظّم",
@@ -553,7 +553,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.support": "الدعم",
     "footer.contact": "اتصل بنا",
     "footer.faq": "الأسئلة الشائعة",
-    "footer.rights": "© 2026 سبيل الجنة. جميع الحقوق محفوظة.",
+    "footer.rights": "© 2026 سبيل الجنة الإسلامية الدولية. جميع الحقوق محفوظة.",
 
     // Login
     "login.title": "أهلاً بعودتك",
