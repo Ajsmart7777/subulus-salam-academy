@@ -14,13 +14,13 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-card">
+    <section className="py-24 section-divider">
       <div className="container">
         <div className="text-center mb-16">
-          <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-3 font-body">
+          <span className="inline-flex items-center gap-2 bg-accent/14 text-foreground border border-accent/28 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
             {t("features.label")}
-          </p>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
+          </span>
+          <h2 className="font-heading font-bold text-foreground mb-4">
             {t("features.title")}
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto font-body">
@@ -32,12 +32,15 @@ const FeaturesSection = () => {
           {features.map((feature) => (
             <div
               key={feature.titleKey}
-              className="p-6 rounded-lg bg-background shadow-card hover:shadow-elevated transition-shadow duration-300 group"
+              className="relative p-7 rounded-xl bg-card border border-border shadow-soft hover:shadow-card hover:-translate-y-1 hover:border-accent/35 transition-all duration-300 group overflow-hidden"
             >
-              <div className="h-12 w-12 rounded-lg gradient-hero flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              {/* Top accent bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+
+              <div className="h-12 w-12 rounded-xl gradient-hero flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <feature.icon className="h-6 w-6 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-heading font-bold text-foreground mb-2">{t(feature.titleKey)}</h3>
+              <h3 className="text-lg font-heading font-semibold text-foreground mb-2">{t(feature.titleKey)}</h3>
               <p className="text-sm text-muted-foreground font-body leading-relaxed">{t(feature.descKey)}</p>
             </div>
           ))}

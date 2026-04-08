@@ -28,11 +28,14 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <header className="sticky top-0 z-50 bg-card/88 backdrop-blur-xl border-b border-primary/8 shadow-[0_4px_18px_hsl(160_72%_21%/0.03)]">
       <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logoIcon} alt="Sabilul Jannah" className="h-10 w-10 rounded-md" width={512} height={512} />
-          <span className="font-heading text-lg font-bold text-foreground leading-tight">Sabilul Jannah <span className="hidden lg:inline text-sm font-normal text-muted-foreground">International Online Islamiyya</span></span>
+        <Link to="/" className="flex items-center gap-3">
+          <img src={logoIcon} alt="Sabilul Jannah" className="h-10 w-10 rounded-lg" width={512} height={512} />
+          <div className="leading-tight">
+            <span className="font-heading text-lg font-bold text-foreground block">Sabilul Jannah</span>
+            <span className="hidden lg:block text-xs font-body text-muted-foreground tracking-wide">International Online Islamiyya</span>
+          </div>
         </Link>
 
         {/* Desktop nav */}
@@ -41,11 +44,14 @@ const Navbar = () => {
             <Link
               key={link.to}
               to={link.to}
-              className={`text-sm font-body font-medium transition-colors hover:text-primary ${
+              className={`relative text-sm font-body font-medium transition-colors hover:text-primary ${
                 location.pathname === link.to ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {link.label}
+              {location.pathname === link.to && (
+                <span className="absolute -bottom-1.5 left-0 w-full h-[1.5px] bg-gradient-to-r from-accent to-primary" />
+              )}
             </Link>
           ))}
         </nav>
@@ -98,7 +104,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-background p-4 space-y-3">
+        <div className="md:hidden border-t border-primary/8 bg-card p-5 space-y-3">
           {navLinks.map((link) => (
             <Link
               key={link.to}
@@ -111,13 +117,13 @@ const Navbar = () => {
           ))}
 
           {/* Mobile Language Switcher */}
-          <div className="flex flex-wrap gap-2 py-2 border-t border-border">
+          <div className="flex flex-wrap gap-2 py-3 border-t border-primary/8">
             {(Object.keys(localeNames) as Locale[]).map((l) => (
               <button
                 key={l}
                 onClick={() => { setLocale(l); setMobileOpen(false); }}
-                className={`text-xs px-3 py-1.5 rounded-full border font-body ${
-                  locale === l ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground"
+                className={`text-xs px-3 py-1.5 rounded-full border font-body transition-colors ${
+                  locale === l ? "bg-primary text-primary-foreground border-primary" : "border-primary/18 text-muted-foreground hover:border-primary/35"
                 }`}
               >
                 {localeNames[l]}
