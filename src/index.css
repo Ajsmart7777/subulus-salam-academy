@@ -1,69 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 40 33% 97%;
-    --foreground: 160 20% 15%;
+    --background: 38 45% 95%;
+    --foreground: 153 16% 14%;
 
-    --card: 40 30% 95%;
-    --card-foreground: 160 20% 15%;
+    --card: 40 60% 99%;
+    --card-foreground: 153 16% 14%;
 
-    --popover: 40 33% 97%;
-    --popover-foreground: 160 20% 15%;
+    --popover: 40 60% 99%;
+    --popover-foreground: 153 16% 14%;
 
-    --primary: 152 32% 40%;
-    --primary-foreground: 40 33% 97%;
+    --primary: 160 72% 21%;
+    --primary-foreground: 38 45% 95%;
 
-    --secondary: 40 40% 90%;
-    --secondary-foreground: 160 20% 20%;
+    --secondary: 38 35% 90%;
+    --secondary-foreground: 153 16% 20%;
 
-    --muted: 40 20% 92%;
-    --muted-foreground: 160 10% 45%;
+    --muted: 38 25% 92%;
+    --muted-foreground: 150 6% 37%;
 
-    --accent: 42 70% 55%;
-    --accent-foreground: 160 20% 12%;
+    --accent: 37 50% 60%;
+    --accent-foreground: 153 16% 12%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 152 32% 40%;
+    --border: 160 72% 21% / 0.14;
+    --input: 160 72% 21% / 0.12;
+    --ring: 160 72% 21%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    --sidebar-background: 40 30% 95%;
-    --sidebar-foreground: 160 20% 20%;
-    --sidebar-primary: 152 32% 40%;
-    --sidebar-primary-foreground: 40 33% 97%;
-    --sidebar-accent: 40 35% 90%;
-    --sidebar-accent-foreground: 160 20% 15%;
-    --sidebar-border: 40 20% 88%;
-    --sidebar-ring: 152 32% 40%;
+    --sidebar-background: 38 35% 90%;
+    --sidebar-foreground: 153 16% 20%;
+    --sidebar-primary: 160 72% 21%;
+    --sidebar-primary-foreground: 38 45% 95%;
+    --sidebar-accent: 38 35% 88%;
+    --sidebar-accent-foreground: 153 16% 14%;
+    --sidebar-border: 160 72% 21% / 0.14;
+    --sidebar-ring: 160 72% 21%;
 
     /* Custom tokens */
-    --gold: 42 70% 55%;
-    --gold-light: 42 60% 75%;
-    --sage: 152 32% 40%;
-    --sage-light: 152 25% 85%;
-    --sage-dark: 152 35% 28%;
-    --cream: 40 33% 97%;
-    --cream-dark: 40 30% 92%;
-    --warm-gray: 30 10% 50%;
+    --gold: 37 50% 60%;
+    --gold-light: 37 40% 80%;
+    --sage: 160 72% 21%;
+    --sage-light: 160 25% 85%;
+    --sage-dark: 160 75% 15%;
+    --cream: 38 45% 95%;
+    --cream-dark: 38 35% 90%;
+    --warm-gray: 150 6% 37%;
+    --surface: 40 60% 99%;
+    --surface-2: 38 40% 93%;
+    --accent-soft: 37 40% 80%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(152 32% 40%), hsl(152 35% 28%));
-    --gradient-gold: linear-gradient(135deg, hsl(42 70% 55%), hsl(42 60% 65%));
-    --gradient-card: linear-gradient(180deg, hsl(40 30% 95%), hsl(40 33% 97%));
-
-    --shadow-soft: 0 2px 20px -4px hsl(152 32% 40% / 0.12);
-    --shadow-card: 0 4px 24px -8px hsl(160 20% 15% / 0.08);
-    --shadow-elevated: 0 8px 40px -12px hsl(160 20% 15% / 0.15);
-
-    --font-heading: 'Amiri', serif;
+    --font-heading: 'Cormorant Garamond', 'Amiri', serif;
     --font-body: 'Inter', sans-serif;
   }
 }
@@ -73,13 +66,47 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    background:
+      radial-gradient(circle at top left, hsl(37 50% 60% / 0.08), transparent 28%),
+      radial-gradient(circle at bottom right, hsl(160 72% 21% / 0.08), transparent 30%),
+      hsl(var(--background));
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 3vw, 3.2rem);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    font-weight: 600;
+  }
+
+  blockquote {
+    background: hsl(37 50% 60% / 0.08);
+    border-left: 4px solid hsl(var(--accent));
+    padding: 1.2rem 1.4rem;
+    border-radius: 0 16px 16px 0;
   }
 }
 
@@ -90,20 +117,45 @@
   .font-body {
     font-family: var(--font-body);
   }
+  .font-arabic {
+    font-family: 'Amiri', serif;
+  }
   .gradient-hero {
-    background: var(--gradient-hero);
+    background: linear-gradient(135deg, hsl(160 72% 21%), hsl(160 75% 15%));
   }
   .gradient-gold {
-    background: var(--gradient-gold);
+    background: linear-gradient(135deg, hsl(37 50% 60%), hsl(37 45% 52%));
+  }
+  .gradient-cta {
+    background:
+      linear-gradient(135deg, hsl(160 72% 21% / 0.95), hsl(160 75% 15% / 0.95)),
+      radial-gradient(circle at top right, hsl(37 50% 60% / 0.22), transparent 25%);
   }
   .shadow-soft {
-    box-shadow: var(--shadow-soft);
+    box-shadow: 0 6px 18px hsl(153 35% 11% / 0.05);
   }
   .shadow-card {
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 10px 30px hsl(153 35% 11% / 0.08);
   }
   .shadow-elevated {
-    box-shadow: var(--shadow-elevated);
+    box-shadow: 0 22px 50px hsl(160 72% 21% / 0.18);
+  }
+  .arch-frame {
+    border-radius: 999px 999px 24px 24px / 220px 220px 24px 24px;
+    overflow: hidden;
+  }
+  .islamic-pattern-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='rgba(15,91,70,0.06)' stroke-width='1'%3E%3Cpath d='M110 10 L180 80 L110 150 L40 80 Z'/%3E%3Cpath d='M110 40 L150 80 L110 120 L70 80 Z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 240px;
+  }
+  .section-divider::after {
+    content: "";
+    display: block;
+    width: 120px;
+    height: 2px;
+    margin: 2rem auto 0;
+    background: linear-gradient(to right, transparent, hsl(var(--accent)), transparent);
+    opacity: 0.45;
   }
 }
 
@@ -122,11 +174,6 @@
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
 }
 
 .animate-fade-up {

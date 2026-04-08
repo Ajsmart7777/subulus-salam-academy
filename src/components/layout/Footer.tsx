@@ -1,36 +1,40 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
+import logoIcon from "@/assets/logo-icon.png";
 
 const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-card border-t border-border py-12">
-      <div className="container">
-        <div className="grid md:grid-cols-3 gap-8">
+    <footer className="gradient-hero text-primary-foreground mt-16 rounded-t-3xl">
+      <div className="container py-16">
+        <div className="grid md:grid-cols-3 gap-10">
           <div>
-            <h3 className="font-heading text-lg font-bold text-foreground mb-3">Sabilul Jannah International Online Islamiyya</h3>
-            <p className="text-sm text-muted-foreground font-body leading-relaxed">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={logoIcon} alt="Sabilul Jannah" className="h-10 w-10 rounded-lg brightness-150" width={512} height={512} />
+              <h3 className="font-heading text-xl font-bold text-primary-foreground">Sabilul Jannah</h3>
+            </div>
+            <p className="text-sm text-primary-foreground/75 font-body leading-relaxed">
               {t("footer.description")}
             </p>
           </div>
           <div>
-            <h4 className="font-body font-semibold text-foreground mb-3 text-sm">{t("footer.platform")}</h4>
-            <div className="space-y-2">
-              <Link to="/courses" className="block text-sm text-muted-foreground hover:text-primary font-body">{t("nav.courses")}</Link>
-              <Link to="/dashboard" className="block text-sm text-muted-foreground hover:text-primary font-body">{t("nav.dashboard")}</Link>
+            <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-lg">{t("footer.platform")}</h4>
+            <div className="space-y-3">
+              <Link to="/courses" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("nav.courses")}</Link>
+              <Link to="/dashboard" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("nav.dashboard")}</Link>
             </div>
           </div>
           <div>
-            <h4 className="font-body font-semibold text-foreground mb-3 text-sm">{t("footer.support")}</h4>
-            <div className="space-y-2">
-              <Link to="#" className="block text-sm text-muted-foreground hover:text-primary font-body">{t("footer.contact")}</Link>
-              <Link to="#" className="block text-sm text-muted-foreground hover:text-primary font-body">{t("footer.faq")}</Link>
+            <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-lg">{t("footer.support")}</h4>
+            <div className="space-y-3">
+              <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.contact")}</Link>
+              <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.faq")}</Link>
             </div>
           </div>
         </div>
-        <div className="border-t border-border mt-8 pt-6 text-center">
-          <p className="text-xs text-muted-foreground font-body">{t("footer.rights")}</p>
+        <div className="border-t border-primary-foreground/15 mt-10 pt-6 text-center">
+          <p className="text-xs text-primary-foreground/60 font-body">{t("footer.rights")}</p>
         </div>
       </div>
     </footer>

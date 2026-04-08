@@ -9,13 +9,14 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1200px",
       },
     },
     extend: {
       fontFamily: {
-        heading: ['Amiri', 'serif'],
+        heading: ['Cormorant Garamond', 'Amiri', 'serif'],
         body: ['Inter', 'sans-serif'],
+        arabic: ['Amiri', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -74,12 +75,19 @@ export default {
           DEFAULT: "hsl(var(--cream))",
           dark: "hsl(var(--cream-dark))",
         },
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          "2": "hsl(var(--surface-2))",
+        },
         "warm-gray": "hsl(var(--warm-gray))",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "1.125rem",
+        "2xl": "1.75rem",
+        "3xl": "2.5rem",
       },
       keyframes: {
         "accordion-down": {
