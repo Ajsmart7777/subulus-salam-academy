@@ -345,8 +345,34 @@ const TeacherCoursePage = () => {
   const { createModule } = useCourseMutations();
   const [moduleTitle, setModuleTitle] = useState("");
   const [moduleWeek, setModuleWeek] = useState("");
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   const course = courses?.find((c) => c.id === courseId);
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !courseId) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 5MB", variant: "destructive" });
+      return;
+    }
+    setBannerUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const filePath = `${courseId}/banner.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("course-banners").upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from("course-banners").getPublicUrl(filePath);
+      const { error: updateError } = await supabase.from("courses").update({ image_url: urlData.publicUrl }).eq("id", courseId);
+      if (updateError) throw updateError;
+      toast({ title: "Banner updated!" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setBannerUploading(false);
+    }
+  };
 
   const handleAddModule = () => {
     if (!moduleTitle.trim() || !courseId) return;
