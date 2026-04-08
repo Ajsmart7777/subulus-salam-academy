@@ -8,37 +8,28 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const LessonPage = () => {
   const { courseId, lessonId } = useParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
-  // Fetch lesson with module info
   const { data, isLoading } = useQuery({
     queryKey: ["lesson", lessonId],
     queryFn: async () => {
-      const { data: lesson, error } = await supabase
-        .from("lessons")
-        .select("*, modules:module_id(title, week, course_id)")
-        .eq("id", lessonId!)
-        .single();
+      const { data: lesson, error } = await supabase.from("lessons").select("*, modules:module_id(title, week, course_id)").eq("id", lessonId!).single();
       if (error) throw error;
       return lesson;
     },
     enabled: !!lessonId,
   });
 
-  // Fetch completion status
   const { data: progressData } = useQuery({
     queryKey: ["lesson-progress-single", lessonId, user?.id],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("lesson_progress")
-        .select("*")
-        .eq("lesson_id", lessonId!)
-        .eq("user_id", user!.id)
-        .maybeSingle();
+      const { data } = await supabase.from("lesson_progress").select("*").eq("lesson_id", lessonId!).eq("user_id", user!.id).maybeSingle();
       return data;
     },
     enabled: !!lessonId && !!user,
@@ -49,27 +40,17 @@ const LessonPage = () => {
   const markComplete = useMutation({
     mutationFn: async () => {
       if (progressData) {
-        const { error } = await supabase
-          .from("lesson_progress")
-          .update({ completed: true, completed_at: new Date().toISOString() })
-          .eq("id", progressData.id);
+        const { error } = await supabase.from("lesson_progress").update({ completed: true, completed_at: new Date().toISOString() }).eq("id", progressData.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase
-          .from("lesson_progress")
-          .insert({
-            user_id: user!.id,
-            lesson_id: lessonId!,
-            completed: true,
-            completed_at: new Date().toISOString(),
-          });
+        const { error } = await supabase.from("lesson_progress").insert({ user_id: user!.id, lesson_id: lessonId!, completed: true, completed_at: new Date().toISOString() });
         if (error) throw error;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lesson-progress"] });
       queryClient.invalidateQueries({ queryKey: ["lesson-progress-single", lessonId] });
-      toast({ title: "Lesson completed! ✓" });
+      toast({ title: t("lesson.complete_toast") });
     },
   });
 
@@ -89,9 +70,9 @@ const LessonPage = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container py-20 text-center">
-          <h1 className="text-2xl font-heading font-bold text-foreground">Lesson not found</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground">{t("lesson.not_found")}</h1>
           <Button variant="hero" className="mt-4" asChild>
-            <Link to={`/course/${courseId}`}>Back to Course</Link>
+            <Link to={`/course/${courseId}`}>{t("lesson.back_course")}</Link>
           </Button>
         </div>
       </div>
@@ -104,15 +85,12 @@ const LessonPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container py-8 max-w-4xl">
-        <Link
-          to={`/course/${courseId}`}
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary font-body mb-6"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to course
+        <Link to={`/course/${courseId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary font-body mb-6">
+          <ArrowLeft className="h-4 w-4" /> {t("lesson.back")}
         </Link>
 
         <div className="mb-6">
-          <p className="text-xs text-muted-foreground font-body mb-1">Week {module?.week} · {module?.title}</p>
+          <p className="text-xs text-muted-foreground font-body mb-1">{t("course.week")} {module?.week} · {module?.title}</p>
           <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">{data.title}</h1>
           <div className="flex items-center gap-3">
             <Badge variant="outline" className="text-xs font-body capitalize">{data.type}</Badge>
@@ -120,7 +98,6 @@ const LessonPage = () => {
           </div>
         </div>
 
-        {/* Content area */}
         {data.content_text ? (
           <div className="prose prose-sm max-w-none bg-card rounded-lg border border-border p-6 mb-8 shadow-card font-body">
             <div dangerouslySetInnerHTML={{ __html: data.content_text }} />
@@ -133,44 +110,33 @@ const LessonPage = () => {
           <div className="rounded-lg bg-card border border-border aspect-video flex items-center justify-center mb-8 shadow-card">
             <div className="text-center">
               <div className="h-16 w-16 rounded-full gradient-hero flex items-center justify-center mx-auto mb-3">
-                <svg className="h-8 w-8 text-primary-foreground" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                <svg className="h-8 w-8 text-primary-foreground" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
               </div>
-              <p className="text-sm text-muted-foreground font-body">Lesson content will appear here</p>
+              <p className="text-sm text-muted-foreground font-body">{t("lesson.placeholder")}</p>
             </div>
           </div>
         )}
 
         <div className="flex flex-wrap gap-3 mb-8">
-          <Button
-            variant={isCompleted ? "outline" : "hero"}
-            className="gap-2"
-            onClick={() => !isCompleted && markComplete.mutate()}
-            disabled={isCompleted || markComplete.isPending}
-          >
+          <Button variant={isCompleted ? "outline" : "hero"} className="gap-2" onClick={() => !isCompleted && markComplete.mutate()} disabled={isCompleted || markComplete.isPending}>
             <CheckCircle2 className="h-4 w-4" />
-            {isCompleted ? "Completed ✓" : markComplete.isPending ? "Saving..." : "Mark as Complete"}
+            {isCompleted ? t("lesson.completed") : markComplete.isPending ? t("lesson.saving") : t("lesson.mark_complete")}
           </Button>
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" /> Download Materials
-          </Button>
-          <Button variant="outline" className="gap-2">
-            <MessageCircle className="h-4 w-4" /> Ask AI Assistant
-          </Button>
+          <Button variant="outline" className="gap-2"><Download className="h-4 w-4" /> {t("lesson.download")}</Button>
+          <Button variant="outline" className="gap-2"><MessageCircle className="h-4 w-4" /> {t("lesson.ai_assistant")}</Button>
         </div>
 
         <div className="bg-card rounded-lg p-6 shadow-card mb-8">
-          <h3 className="font-heading font-bold text-foreground mb-3">Your Notes</h3>
+          <h3 className="font-heading font-bold text-foreground mb-3">{t("lesson.notes")}</h3>
           <textarea
             className="w-full min-h-[120px] bg-background rounded-md border border-input p-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y"
-            placeholder="Write your notes for this lesson..."
+            placeholder={t("lesson.notes_placeholder")}
           />
         </div>
 
         <div className="flex justify-between">
           <Button variant="ghost" className="font-body text-sm" asChild>
-            <Link to={`/course/${courseId}`}>← Back to Course</Link>
+            <Link to={`/course/${courseId}`}>{t("lesson.back_course")}</Link>
           </Button>
         </div>
       </div>
