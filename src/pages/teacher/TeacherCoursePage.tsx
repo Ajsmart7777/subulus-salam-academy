@@ -393,7 +393,25 @@ const TeacherCoursePage = () => {
         {course && (
           <div className="mb-8">
             <h1 className="text-3xl font-heading font-bold text-foreground mb-1">{course.title}</h1>
-            <p className="text-muted-foreground font-body">{course.description}</p>
+            <p className="text-muted-foreground font-body mb-4">{course.description}</p>
+            {/* Banner Management */}
+            <div className="rounded-xl border border-border overflow-hidden">
+              <div className="relative h-40 sm:h-52 bg-gradient-to-br from-sage-700 to-sage-900 flex items-center justify-center">
+                {course.image_url ? (
+                  <img src={course.image_url} alt="Course banner" className="absolute inset-0 w-full h-full object-cover rounded-none" />
+                ) : (
+                  <p className="text-white/60 font-body text-sm">No banner set</p>
+                )}
+              </div>
+              <div className="p-3 bg-card flex items-center justify-between">
+                <p className="text-xs text-muted-foreground font-body">Course Banner · Recommended 1200×400px, max 5MB</p>
+                <input ref={bannerInputRef} type="file" className="hidden" accept="image/*" onChange={handleBannerUpload} />
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={() => bannerInputRef.current?.click()} disabled={bannerUploading}>
+                  {bannerUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImageIcon className="h-3.5 w-3.5" />}
+                  {bannerUploading ? "Uploading..." : "Upload Banner"}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
 
