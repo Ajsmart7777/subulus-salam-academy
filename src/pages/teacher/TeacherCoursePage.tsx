@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Plus, Trash2, ArrowLeft, BookOpen, FileText, PlayCircle, Headphones,
-  ClipboardList, ChevronDown, ChevronRight, Upload, Edit, Loader2, ExternalLink
+  ClipboardList, ChevronDown, ChevronRight, Upload, Edit, Loader2, ExternalLink, ImageIcon
 } from "lucide-react";
 import { useCourseModules, useModuleLessons, useModuleAssignments, useCourseMutations, useTeacherCourses, LessonRow } from "@/hooks/useTeacherCourses";
 import { useState, useRef } from "react";
@@ -345,8 +345,34 @@ const TeacherCoursePage = () => {
   const { createModule } = useCourseMutations();
   const [moduleTitle, setModuleTitle] = useState("");
   const [moduleWeek, setModuleWeek] = useState("");
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   const course = courses?.find((c) => c.id === courseId);
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !courseId) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 5MB", variant: "destructive" });
+      return;
+    }
+    setBannerUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const filePath = `${courseId}/banner.${ext}`;
+      const { error: uploadError } = await supabase.storage.from("course-banners").upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from("course-banners").getPublicUrl(filePath);
+      const { error: updateError } = await supabase.from("courses").update({ image_url: urlData.publicUrl }).eq("id", courseId);
+      if (updateError) throw updateError;
+      toast({ title: "Banner updated!" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setBannerUploading(false);
+    }
+  };
 
   const handleAddModule = () => {
     if (!moduleTitle.trim() || !courseId) return;
@@ -367,7 +393,25 @@ const TeacherCoursePage = () => {
         {course && (
           <div className="mb-8">
             <h1 className="text-3xl font-heading font-bold text-foreground mb-1">{course.title}</h1>
-            <p className="text-muted-foreground font-body">{course.description}</p>
+            <p className="text-muted-foreground font-body mb-4">{course.description}</p>
+            {/* Banner Management */}
+            <div className="rounded-xl border border-border overflow-hidden">
+              <div className="relative h-40 sm:h-52 bg-gradient-to-br from-sage-700 to-sage-900 flex items-center justify-center">
+                {course.image_url ? (
+                  <img src={course.image_url} alt="Course banner" className="absolute inset-0 w-full h-full object-cover rounded-none" />
+                ) : (
+                  <p className="text-white/60 font-body text-sm">No banner set</p>
+                )}
+              </div>
+              <div className="p-3 bg-card flex items-center justify-between">
+                <p className="text-xs text-muted-foreground font-body">Course Banner · Recommended 1200×400px, max 5MB</p>
+                <input ref={bannerInputRef} type="file" className="hidden" accept="image/*" onChange={handleBannerUpload} />
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={() => bannerInputRef.current?.click()} disabled={bannerUploading}>
+                  {bannerUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImageIcon className="h-3.5 w-3.5" />}
+                  {bannerUploading ? "Uploading..." : "Upload Banner"}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
 
