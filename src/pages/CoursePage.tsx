@@ -133,6 +133,39 @@ const CoursePage = () => {
     },
   });
 
+  // Sponsorship request query
+  const { data: existingSponsorRequest } = useQuery({
+    queryKey: ["sponsorship-request", courseId, user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("student_sponsorship_requests")
+        .select("id, status")
+        .eq("student_user_id", user!.id)
+        .eq("course_id", courseId!)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!courseId && !!user && !enrollment,
+  });
+
+  const requestSponsorship = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("student_sponsorship_requests").insert({
+        student_user_id: user!.id,
+        course_id: courseId!,
+        reason: sponsorReason.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sponsorship-request", courseId] });
+      toast({ title: t("sponsor.request_success"), description: t("sponsor.request_success_desc") });
+      setSponsorDialogOpen(false);
+      setSponsorReason("");
+    },
+    onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+  });
+
   const handlePayment = async () => {
     if (!user || !courseId) return;
     setPaymentLoading(true);
