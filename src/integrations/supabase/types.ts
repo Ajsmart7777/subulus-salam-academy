@@ -168,6 +168,111 @@ export type Database = {
         }
         Relationships: []
       }
+      donation_campaigns: {
+        Row: {
+          active: boolean
+          created_at: string
+          currency: string
+          description: string | null
+          goal_amount: number
+          id: string
+          image_url: string | null
+          raised_amount: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          goal_amount?: number
+          id?: string
+          image_url?: string | null
+          raised_amount?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          goal_amount?: number
+          id?: string
+          image_url?: string | null
+          raised_amount?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      donations: {
+        Row: {
+          amount: number
+          campaign_id: string | null
+          created_at: string
+          currency: string
+          donor_email: string | null
+          donor_name: string
+          donor_phone: string | null
+          flutterwave_ref: string | null
+          flutterwave_tx_id: string | null
+          id: string
+          sponsorship_request_id: string | null
+          status: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          campaign_id?: string | null
+          created_at?: string
+          currency?: string
+          donor_email?: string | null
+          donor_name: string
+          donor_phone?: string | null
+          flutterwave_ref?: string | null
+          flutterwave_tx_id?: string | null
+          id?: string
+          sponsorship_request_id?: string | null
+          status?: string
+          type?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          campaign_id?: string | null
+          created_at?: string
+          currency?: string
+          donor_email?: string | null
+          donor_name?: string
+          donor_phone?: string | null
+          flutterwave_ref?: string | null
+          flutterwave_tx_id?: string | null
+          id?: string
+          sponsorship_request_id?: string | null
+          status?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "donation_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "donations_sponsorship_request_id_fkey"
+            columns: ["sponsorship_request_id"]
+            isOneToOne: false
+            referencedRelation: "student_sponsorship_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       enrollments: {
         Row: {
           course_id: string
@@ -457,6 +562,54 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      student_sponsorship_requests: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          reason: string | null
+          sponsored_by_donation_id: string | null
+          status: string
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          sponsored_by_donation_id?: string | null
+          status?: string
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          sponsored_by_donation_id?: string | null
+          status?: string
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sponsorship_requests_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sponsorship_requests_donation_id_fkey"
+            columns: ["sponsored_by_donation_id"]
+            isOneToOne: false
+            referencedRelation: "donations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
