@@ -277,16 +277,48 @@ const CoursePage = () => {
             )}
 
             {!isEnrolled && user && (
-              <div className="mt-4">
+              <div className="mt-4 flex flex-wrap gap-3">
                 {isFree ? (
                   <Button variant="gold" size="lg" onClick={() => enrollMutation.mutate()} disabled={enrollMutation.isPending}>
                     {enrollMutation.isPending ? t("course.enrolling") : t("course.enroll_free")}
                   </Button>
                 ) : (
-                  <Button variant="gold" size="lg" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
-                    <CreditCard className="h-4 w-4" />
-                    {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
-                  </Button>
+                  <>
+                    <Button variant="gold" size="lg" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
+                      <CreditCard className="h-4 w-4" />
+                      {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
+                    </Button>
+                    {existingSponsorRequest ? (
+                      <Badge className="bg-primary-foreground/20 text-primary-foreground self-center">
+                        <HandHeart className="h-3 w-3 mr-1" /> {t("sponsor.already_requested")}
+                      </Badge>
+                    ) : (
+                      <Dialog open={sponsorDialogOpen} onOpenChange={setSponsorDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="lg" className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                            <HandHeart className="h-4 w-4" /> {t("sponsor.request_btn")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle className="font-heading">{t("sponsor.request_title")}</DialogTitle>
+                          </DialogHeader>
+                          <p className="text-sm text-muted-foreground font-body">{t("sponsor.request_desc")}</p>
+                          <div className="space-y-3">
+                            <Textarea
+                              value={sponsorReason}
+                              onChange={(e) => setSponsorReason(e.target.value)}
+                              placeholder={t("sponsor.reason_placeholder")}
+                              rows={3}
+                            />
+                            <Button variant="hero" className="w-full" onClick={() => requestSponsorship.mutate()} disabled={requestSponsorship.isPending}>
+                              {t("sponsor.request_btn")}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </>
                 )}
               </div>
             )}
