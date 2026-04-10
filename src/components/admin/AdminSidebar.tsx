@@ -1,18 +1,3 @@
-import { LayoutDashboard, Users, GraduationCap, BookOpen, Settings, BarChart3, Gift } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-  useSidebar,
-} from "@/components/ui/sidebar";
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, Settings, BarChart3, Gift, Heart, Target, HandHeart } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
