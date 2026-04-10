@@ -22,7 +22,7 @@ const AdminDonationsPage = () => {
   const totalCount = donations?.filter((d: any) => d.status === "completed").length ?? 0;
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Donations">
       <div className="space-y-6">
         <h1 className="text-2xl font-heading font-bold text-foreground">Donations</h1>
 
