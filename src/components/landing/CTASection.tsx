@@ -21,10 +21,10 @@ const CTASection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="gold" size="lg" asChild>
-                <Link to="/donate">{t("nav.donate")}</Link>
+                <Link to="/register">{t("hero.cta_primary")}</Link>
               </Button>
               <Button variant="outline" size="lg" className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/10" asChild>
-                <Link to="/sponsor-a-student">{t("nav.sponsor")}</Link>
+                <Link to="/courses">{t("hero.cta_secondary")}</Link>
               </Button>
             </div>
           </div>
