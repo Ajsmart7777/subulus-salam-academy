@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, Globe } from "lucide-react";
+import { Menu, X, LogOut, Globe, Heart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -22,8 +22,6 @@ const Navbar = () => {
   const navLinks = [
     { label: t("nav.home"), to: "/" },
     { label: t("nav.courses"), to: "/courses" },
-    { label: t("nav.donate"), to: "/donate" },
-    { label: t("nav.sponsor"), to: "/sponsor-a-student" },
     { label: t("nav.dashboard"), to: "/dashboard" },
     ...(hasRole("teacher") ? [{ label: t("nav.teacher_panel"), to: "/teacher" }] : []),
     ...(hasRole("admin") ? [{ label: t("nav.admin_panel"), to: "/admin" }] : []),
@@ -59,6 +57,9 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <Button variant="gold" size="sm" className="gap-1.5" asChild>
+            <Link to="/donate"><Heart className="h-3.5 w-3.5" /> {t("nav.donate")}</Link>
+          </Button>
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -133,6 +134,9 @@ const Navbar = () => {
             ))}
           </div>
 
+          <Button variant="gold" size="sm" className="w-full gap-1.5" asChild>
+            <Link to="/donate" onClick={() => setMobileOpen(false)}><Heart className="h-3.5 w-3.5" /> {t("nav.donate")}</Link>
+          </Button>
           <div className="flex gap-3 pt-2">
             {user ? (
               <Button variant="ghost" size="sm" className="flex-1 gap-2" onClick={() => { signOut(); setMobileOpen(false); }}>

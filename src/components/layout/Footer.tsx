@@ -28,6 +28,8 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground mb-4 text-lg">{t("footer.support")}</h4>
             <div className="space-y-3">
+              <Link to="/donate" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("nav.donate")}</Link>
+              <Link to="/sponsor-a-student" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("nav.sponsor")}</Link>
               <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.contact")}</Link>
               <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.faq")}</Link>
             </div>
