@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Target, Gift, Copy, Award } from "lucide-react";
+import { BookOpen, Target, Gift, Copy, Award, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -71,6 +71,19 @@ const Dashboard = () => {
     queryKey: ["my-certificates", user?.id],
     queryFn: async () => {
       const { data } = await supabase.from("certificates").select("*, courses:course_id(title)").eq("user_id", user!.id);
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
+
+  const { data: sponsorshipRequests } = useQuery({
+    queryKey: ["my-sponsorship-requests", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("student_sponsorship_requests")
+        .select("*, courses:course_id(title, price)")
+        .eq("student_user_id", user!.id)
+        .order("created_at", { ascending: false });
       return data ?? [];
     },
     enabled: !!user,
@@ -157,6 +170,37 @@ const Dashboard = () => {
                   <Button variant="outline" size="sm" className="gap-1 text-xs shrink-0">{t("dashboard.view")} <Award className="h-3 w-3" /></Button>
                 </Link>
               ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {sponsorshipRequests && sponsorshipRequests.length > 0 && (
+          <Card className="mb-6 sm:mb-8">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="font-heading flex items-center gap-2 text-base sm:text-lg">
+                <Heart className="h-5 w-5 text-accent" /> {t("dashboard.your_sponsorship")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {sponsorshipRequests.map((req: any) => {
+                const statusColor = req.status === "sponsored" ? "bg-green-100 text-green-800" : req.status === "rejected" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800";
+                return (
+                  <div key={req.id} className="flex items-center justify-between p-3 sm:p-4 bg-muted/50 rounded-xl gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-10 w-10 rounded-full gradient-hero flex items-center justify-center shrink-0">
+                        <Heart className="h-5 w-5 text-primary-foreground" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-heading font-medium text-foreground truncate text-sm sm:text-base">{req.courses?.title ?? "Course"}</p>
+                        <p className="text-xs text-muted-foreground font-body">{new Date(req.created_at).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <Badge className={`text-xs shrink-0 ${statusColor}`}>
+                      {t(`dashboard.sponsorship_${req.status}`)}
+                    </Badge>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         )}
