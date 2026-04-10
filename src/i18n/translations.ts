@@ -288,6 +288,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "feature.offline.title": "Samun Damar Ba Tare da Yanar Gizo Ba",
     "feature.offline.desc": "Zazzage darussa don ci gaba da koyo a kowane lokaci.",
 
+    // Ways to Give
+    "give.badge": "Hanyoyin Bayarwa",
+    "give.title": "Tallafa Ilimin Musulunci",
+    "give.subtitle": "Gudummawar ka tana ba ɗalibai damar samun ilimin Musulunci na gaske.",
+    "give.donate_title": "Ba da Gudummawa",
+    "give.donate_desc": "Ba da gudummawa ga asusun gaba ɗaya ko yaƙin neman kuɗi na musamman. Kowace gudummawa tana taimakawa.",
+    "give.donate_cta": "Ba da Gudummawa Yanzu",
+    "give.sponsor_title": "Ɗauki Ɗalibi",
+    "give.sponsor_desc": "Biya kuɗin darasi ga ɗalibin da ba zai iya ba. Ga sunansa, darasinsa, da tasirinki kai tsaye.",
+    "give.sponsor_cta": "Ɗauki Ɗalibi",
+
     // CTA
     "cta.title": "Fara Hanyarka Zuwa Ilimi",
     "cta.description": "Ka haɗa kai da dubban ɗalibai a tafiyar da aka tsara ta ilimin Musulunci. Darasi na farko kyauta ne.",
@@ -512,6 +523,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "feature.offline.title": "Heɓde Tawi Alaa Laylaytol",
     "feature.offline.desc": "Aawto darse ngam jokkude jannde sahaa kala, nokku kala.",
 
+    // Ways to Give
+    "give.badge": "Peeje Dokkirde",
+    "give.title": "Wallu Jannde Lislaam",
+    "give.subtitle": "Dokkal maa ina rokka almuɓɓe heɓde ganndal Lislaam goongawal.",
+    "give.donate_title": "Waɗu Dokkal",
+    "give.donate_desc": "Wallu kaalis maa kuuɓal walla ngam kampañ keeriɗɗo. Kala dokkal ina walla.",
+    "give.donate_cta": "Dokku Jooni",
+    "give.sponsor_title": "Wallu Almudɗo",
+    "give.sponsor_desc": "Yoɓan almudɗo mo waawaa yoɓde jannde. Nji'aa innde makko e jannde makko.",
+    "give.sponsor_cta": "Wallu Almudɗo",
+
     // CTA
     "cta.title": "Fuɗɗo Laawol Maa Fayde Ganndal",
     "cta.description": "Tawtu ujunaaje almuɓɓe e jahaangal jannde Lislaam seertiingal. Darse arandeere ndee mehre.",
@@ -735,6 +757,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "feature.community.desc": "شارك في النقاشات وتبادل الأفكار وتعلم مع زملائك الطلاب.",
     "feature.offline.title": "الوصول بدون إنترنت",
     "feature.offline.desc": "حمّل الدروس والمواد لمواصلة التعلم في أي وقت ومكان.",
+
+    // Ways to Give
+    "give.badge": "طرق العطاء",
+    "give.title": "ادعم التعليم الإسلامي",
+    "give.subtitle": "كرمك يمكّن الطلاب من الوصول إلى العلم الإسلامي الأصيل. اختر كيف تريد أن تحدث فرقاً.",
+    "give.donate_title": "تبرّع",
+    "give.donate_desc": "ساهم في الصندوق العام أو حملات محددة. كل تبرع يساعد في استمرار ونمو المنصة.",
+    "give.donate_cta": "تبرّع الآن",
+    "give.sponsor_title": "اكفل طالباً",
+    "give.sponsor_desc": "ادفع رسوم الدورة لطالب لا يستطيع التسجيل. شاهد اسمه ودورته واعرف أثرك مباشرة.",
+    "give.sponsor_cta": "اكفل طالباً",
 
     // CTA
     "cta.title": "ابدأ طريقك نحو العلم",
