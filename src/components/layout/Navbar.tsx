@@ -22,6 +22,8 @@ const Navbar = () => {
   const navLinks = [
     { label: t("nav.home"), to: "/" },
     { label: t("nav.courses"), to: "/courses" },
+    { label: t("nav.donate"), to: "/donate" },
+    { label: t("nav.sponsor"), to: "/sponsor-a-student" },
     { label: t("nav.dashboard"), to: "/dashboard" },
     ...(hasRole("teacher") ? [{ label: t("nav.teacher_panel"), to: "/teacher" }] : []),
     ...(hasRole("admin") ? [{ label: t("nav.admin_panel"), to: "/admin" }] : []),

@@ -5,10 +5,12 @@ import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Lock, CheckCircle2, Circle, PlayCircle, FileText, Headphones,
-  ClipboardList, HelpCircle, ChevronRight, Award, CreditCard,
+  ClipboardList, HelpCircle, ChevronRight, Award, CreditCard, HandHeart,
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +30,8 @@ const CoursePage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [sponsorReason, setSponsorReason] = useState("");
+  const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
   const { t } = useLanguage();
 
   const { data: course, isLoading: courseLoading } = useQuery({
@@ -127,6 +131,39 @@ const CoursePage = () => {
       queryClient.invalidateQueries({ queryKey: ["certificate", courseId] });
       toast({ title: t("course.cert_issued"), description: t("course.cert_issued_desc") });
     },
+  });
+
+  // Sponsorship request query
+  const { data: existingSponsorRequest } = useQuery({
+    queryKey: ["sponsorship-request", courseId, user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("student_sponsorship_requests")
+        .select("id, status")
+        .eq("student_user_id", user!.id)
+        .eq("course_id", courseId!)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!courseId && !!user && !enrollment,
+  });
+
+  const requestSponsorship = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("student_sponsorship_requests").insert({
+        student_user_id: user!.id,
+        course_id: courseId!,
+        reason: sponsorReason.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sponsorship-request", courseId] });
+      toast({ title: t("sponsor.request_success"), description: t("sponsor.request_success_desc") });
+      setSponsorDialogOpen(false);
+      setSponsorReason("");
+    },
+    onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
 
   const handlePayment = async () => {
@@ -240,16 +277,48 @@ const CoursePage = () => {
             )}
 
             {!isEnrolled && user && (
-              <div className="mt-4">
+              <div className="mt-4 flex flex-wrap gap-3">
                 {isFree ? (
                   <Button variant="gold" size="lg" onClick={() => enrollMutation.mutate()} disabled={enrollMutation.isPending}>
                     {enrollMutation.isPending ? t("course.enrolling") : t("course.enroll_free")}
                   </Button>
                 ) : (
-                  <Button variant="gold" size="lg" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
-                    <CreditCard className="h-4 w-4" />
-                    {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
-                  </Button>
+                  <>
+                    <Button variant="gold" size="lg" className="gap-2" disabled={paymentLoading} onClick={handlePayment}>
+                      <CreditCard className="h-4 w-4" />
+                      {paymentLoading ? t("course.processing") : t("course.pay_enroll", { price: coursePrice.toLocaleString() })}
+                    </Button>
+                    {existingSponsorRequest ? (
+                      <Badge className="bg-primary-foreground/20 text-primary-foreground self-center">
+                        <HandHeart className="h-3 w-3 mr-1" /> {t("sponsor.already_requested")}
+                      </Badge>
+                    ) : (
+                      <Dialog open={sponsorDialogOpen} onOpenChange={setSponsorDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="lg" className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                            <HandHeart className="h-4 w-4" /> {t("sponsor.request_btn")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle className="font-heading">{t("sponsor.request_title")}</DialogTitle>
+                          </DialogHeader>
+                          <p className="text-sm text-muted-foreground font-body">{t("sponsor.request_desc")}</p>
+                          <div className="space-y-3">
+                            <Textarea
+                              value={sponsorReason}
+                              onChange={(e) => setSponsorReason(e.target.value)}
+                              placeholder={t("sponsor.reason_placeholder")}
+                              rows={3}
+                            />
+                            <Button variant="hero" className="w-full" onClick={() => requestSponsorship.mutate()} disabled={requestSponsorship.isPending}>
+                              {t("sponsor.request_btn")}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </>
                 )}
               </div>
             )}

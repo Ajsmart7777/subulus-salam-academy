@@ -1,4 +1,5 @@
-import { LayoutDashboard, Users, GraduationCap, BookOpen, Settings, BarChart3, Gift } from "lucide-react";
+
+import { LayoutDashboard, Users, GraduationCap, BookOpen, Settings, BarChart3, Gift, Heart, Target, HandHeart } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -18,6 +19,9 @@ const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Users", url: "/admin/users", icon: Users },
   { title: "Courses", url: "/admin/courses", icon: BookOpen },
+  { title: "Donations", url: "/admin/donations", icon: Heart },
+  { title: "Campaigns", url: "/admin/campaigns", icon: Target },
+  { title: "Sponsorship", url: "/admin/sponsorship", icon: HandHeart },
   { title: "Referrals", url: "/admin/referrals", icon: Gift },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "Settings", url: "/admin/settings", icon: Settings },

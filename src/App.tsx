@@ -23,7 +23,12 @@ import AdminCoursesPage from "./pages/admin/AdminCoursesPage";
 import AdminReferralsPage from "./pages/admin/AdminReferralsPage";
 import AdminReportsPage from "./pages/admin/AdminReportsPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import AdminDonationsPage from "./pages/admin/AdminDonationsPage";
+import AdminCampaignsPage from "./pages/admin/AdminCampaignsPage";
+import AdminSponsorshipPage from "./pages/admin/AdminSponsorshipPage";
 import CertificatePage from "./pages/CertificatePage";
+import DonatePage from "./pages/DonatePage";
+import SponsorStudentPage from "./pages/SponsorStudentPage";
 
 const queryClient = new QueryClient();
 
@@ -95,7 +100,12 @@ const App = () => (
             <Route path="/admin/referrals" element={<ProtectedRoute requiredRole="admin"><AdminReferralsPage /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminReportsPage /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminSettingsPage /></ProtectedRoute>} />
+            <Route path="/admin/donations" element={<ProtectedRoute requiredRole="admin"><AdminDonationsPage /></ProtectedRoute>} />
+            <Route path="/admin/campaigns" element={<ProtectedRoute requiredRole="admin"><AdminCampaignsPage /></ProtectedRoute>} />
+            <Route path="/admin/sponsorship" element={<ProtectedRoute requiredRole="admin"><AdminSponsorshipPage /></ProtectedRoute>} />
             <Route path="/certificate/:certificateId" element={<ProtectedRoute><CertificatePage /></ProtectedRoute>} />
+            <Route path="/donate" element={<DonatePage />} />
+            <Route path="/sponsor-a-student" element={<SponsorStudentPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
