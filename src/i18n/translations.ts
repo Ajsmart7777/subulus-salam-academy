@@ -52,6 +52,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "feature.offline.desc": "Download lessons and materials to continue learning anytime, anywhere.",
 
     // CTA
+    // Ways to Give
+    "give.badge": "Ways to Give",
+    "give.title": "Support Islamic Education",
+    "give.subtitle": "Your generosity empowers students to access authentic Islamic knowledge. Choose how you'd like to make a difference.",
+    "give.donate_title": "Make a Donation",
+    "give.donate_desc": "Contribute to general funds or specific campaigns. Every donation helps sustain and grow the platform for learners worldwide.",
+    "give.donate_cta": "Donate Now",
+    "give.sponsor_title": "Sponsor a Student",
+    "give.sponsor_desc": "Pay the course fee for a student who can't afford to enroll. See their name, their course, and know your impact directly.",
+    "give.sponsor_cta": "Sponsor a Student",
+
     "cta.title": "Start Your Path to Knowledge",
     "cta.description": "Join thousands of students on a disciplined journey through Islamic learning. Your first course is free.",
     "cta.enroll": "Enroll Now — Free",
