@@ -5,10 +5,12 @@ import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Lock, CheckCircle2, Circle, PlayCircle, FileText, Headphones,
-  ClipboardList, HelpCircle, ChevronRight, Award, CreditCard,
+  ClipboardList, HelpCircle, ChevronRight, Award, CreditCard, HandHeart,
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +30,8 @@ const CoursePage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [sponsorReason, setSponsorReason] = useState("");
+  const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
   const { t } = useLanguage();
 
   const { data: course, isLoading: courseLoading } = useQuery({
