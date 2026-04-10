@@ -129,6 +129,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "dashboard.browse": "Browse Courses",
     "dashboard.of_lessons": "of {total} lessons",
     "dashboard.view": "View",
+    "dashboard.your_sponsorship": "Sponsorship Requests",
+    "dashboard.sponsorship_pending": "Pending",
+    "dashboard.sponsorship_sponsored": "Sponsored",
+    "dashboard.sponsorship_rejected": "Rejected",
 
     // Course Page
     "course.not_found": "Course not found",
@@ -351,6 +355,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "dashboard.browse": "Duba Darussa",
     "dashboard.of_lessons": "daga cikin darussa {total}",
     "dashboard.view": "Duba",
+    "dashboard.your_sponsorship": "Bukatun Tallafi",
+    "dashboard.sponsorship_pending": "Ana Jira",
+    "dashboard.sponsorship_sponsored": "An Tallafa",
+    "dashboard.sponsorship_rejected": "An Ƙi",
 
     // Course Page
     "course.not_found": "Ba a sami darasi ba",
@@ -571,6 +579,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "dashboard.browse": "Ƴeewto Jannde",
     "dashboard.of_lessons": "e nder darse {total}",
     "dashboard.view": "Ƴeewto",
+    "dashboard.your_sponsorship": "Ɗaɓɓitanɗe Balle",
+    "dashboard.sponsorship_pending": "Ena faddi",
+    "dashboard.sponsorship_sponsored": "Ina walla",
+    "dashboard.sponsorship_rejected": "Salaama",
 
     // Course Page
     "course.not_found": "Darse yiitaaka",
@@ -791,6 +803,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "dashboard.browse": "تصفح الدورات",
     "dashboard.of_lessons": "من أصل {total} درس",
     "dashboard.view": "عرض",
+    "dashboard.your_sponsorship": "طلبات الرعاية",
+    "dashboard.sponsorship_pending": "قيد الانتظار",
+    "dashboard.sponsorship_sponsored": "تمت الرعاية",
+    "dashboard.sponsorship_rejected": "مرفوض",
 
     // Course Page
     "course.not_found": "الدورة غير موجودة",
