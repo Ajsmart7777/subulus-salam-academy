@@ -62,7 +62,7 @@ const AdminCoursesPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
-      toast({ title: "Course updated" });
+      toast({ title: "Class updated" });
     },
   });
 
@@ -73,7 +73,7 @@ const AdminCoursesPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
-      toast({ title: "Course deleted" });
+      toast({ title: "Class deleted" });
     },
   });
 
@@ -134,8 +134,8 @@ const AdminCoursesPage = () => {
   };
 
   return (
-    <AdminLayout title="Course Management">
-      <p className="text-muted-foreground font-body mb-6">Manage all courses, banners, and pricing.</p>
+    <AdminLayout title="Class Management">
+      <p className="text-muted-foreground font-body mb-6">Manage all classes, banners, and pricing.</p>
 
       {isLoading ? (
         <div className="flex justify-center py-20">
@@ -201,7 +201,7 @@ const AdminCoursesPage = () => {
                           <Button variant="outline" size="sm" onClick={() => togglePublish.mutate({ id: c.id, published: !c.published })}>
                             {c.published ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                           </Button>
-                          <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this course?")) deleteCourse.mutate(c.id); }}>
+                          <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this class?")) deleteCourse.mutate(c.id); }}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -255,7 +255,7 @@ const AdminCoursesPage = () => {
                       <Button variant="outline" size="sm" onClick={() => togglePublish.mutate({ id: c.id, published: !c.published })}>
                         {c.published ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                       </Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this course?")) deleteCourse.mutate(c.id); }}>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this class?")) deleteCourse.mutate(c.id); }}>
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>

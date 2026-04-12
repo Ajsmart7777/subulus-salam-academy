@@ -237,7 +237,7 @@ const ModuleCard = ({ module, courseId }: { module: any; courseId: string }) => 
             <Badge variant="outline" className="text-xs font-body">{lessons?.length || 0} lessons</Badge>
             <Button variant="ghost" size="sm" className="text-destructive h-8 w-8 p-0" onClick={(e) => {
               e.stopPropagation();
-              if (confirm("Delete this module?")) deleteModule.mutate({ id: module.id, courseId });
+              if (confirm("Delete this book?")) deleteModule.mutate({ id: module.id, courseId });
             }}>
               <Trash2 className="h-4 w-4" />
             </Button>
