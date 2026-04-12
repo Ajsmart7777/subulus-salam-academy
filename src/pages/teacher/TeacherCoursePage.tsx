@@ -229,7 +229,7 @@ const ModuleCard = ({ module, courseId }: { module: any; courseId: string }) => 
           <div className="flex items-center gap-3">
             {open ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
             <div className="text-left">
-              <p className="text-xs text-muted-foreground font-body">Week {module.week}</p>
+              <p className="text-xs text-muted-foreground font-body">Book {module.week}</p>
               <h3 className="font-heading font-bold text-foreground">{module.title}</h3>
             </div>
           </div>

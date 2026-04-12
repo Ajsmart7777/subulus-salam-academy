@@ -142,7 +142,7 @@ const AdminCoursesPage = () => {
           <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : !courses?.length ? (
-        <p className="text-center text-muted-foreground py-20">No courses yet.</p>
+        <p className="text-center text-muted-foreground py-20">No classes yet.</p>
       ) : (
         <Card className="overflow-hidden">
           <CardContent className="p-0">
@@ -271,7 +271,7 @@ const AdminCoursesPage = () => {
       <Dialog open={!!pricingCourse} onOpenChange={() => setPricingCourse(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-heading">Set Course Price</DialogTitle>
+            <DialogTitle className="font-heading">Set Class Price</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground font-body">{pricingCourse?.title}</p>
           <div className="space-y-4 pt-2">
@@ -290,7 +290,7 @@ const AdminCoursesPage = () => {
       <Dialog open={!!bannerCourse} onOpenChange={() => setBannerCourse(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-heading">Course Banner</DialogTitle>
+            <DialogTitle className="font-heading">Class Banner</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground font-body">{bannerCourse?.title}</p>
           <div className="space-y-4 pt-2">

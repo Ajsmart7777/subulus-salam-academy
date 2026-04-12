@@ -75,7 +75,7 @@ const TeacherDashboard = () => {
                     <Button variant="ghost" size="sm" onClick={() => updateCourse.mutate({ id: course.id, published: !course.published })}>
                       {course.published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this course and all its content?")) deleteCourse.mutate(course.id); }}>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this class and all its content?")) deleteCourse.mutate(course.id); }}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
