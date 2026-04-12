@@ -221,6 +221,7 @@ const CoursePage = () => {
     if (!progress || !submissions) return false;
     const lessons = mod.lessons ?? [];
     const assignments = mod.assignments ?? [];
+    if (lessons.length === 0) return false; // No lessons = not complete
     return lessons.every((l: any) => progress[l.id]) && (assignments.length === 0 || assignments.every((a: any) => submissions[a.id]));
   };
 
