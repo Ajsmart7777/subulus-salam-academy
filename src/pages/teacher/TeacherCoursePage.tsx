@@ -229,7 +229,7 @@ const ModuleCard = ({ module, courseId }: { module: any; courseId: string }) => 
           <div className="flex items-center gap-3">
             {open ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
             <div className="text-left">
-              <p className="text-xs text-muted-foreground font-body">Week {module.week}</p>
+              <p className="text-xs text-muted-foreground font-body">Book {module.week}</p>
               <h3 className="font-heading font-bold text-foreground">{module.title}</h3>
             </div>
           </div>
@@ -237,7 +237,7 @@ const ModuleCard = ({ module, courseId }: { module: any; courseId: string }) => 
             <Badge variant="outline" className="text-xs font-body">{lessons?.length || 0} lessons</Badge>
             <Button variant="ghost" size="sm" className="text-destructive h-8 w-8 p-0" onClick={(e) => {
               e.stopPropagation();
-              if (confirm("Delete this module?")) deleteModule.mutate({ id: module.id, courseId });
+              if (confirm("Delete this book?")) deleteModule.mutate({ id: module.id, courseId });
             }}>
               <Trash2 className="h-4 w-4" />
             </Button>

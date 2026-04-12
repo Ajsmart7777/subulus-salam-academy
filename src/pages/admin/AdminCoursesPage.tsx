@@ -62,7 +62,7 @@ const AdminCoursesPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
-      toast({ title: "Course updated" });
+      toast({ title: "Class updated" });
     },
   });
 
@@ -73,7 +73,7 @@ const AdminCoursesPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
-      toast({ title: "Course deleted" });
+      toast({ title: "Class deleted" });
     },
   });
 
@@ -134,15 +134,15 @@ const AdminCoursesPage = () => {
   };
 
   return (
-    <AdminLayout title="Course Management">
-      <p className="text-muted-foreground font-body mb-6">Manage all courses, banners, and pricing.</p>
+    <AdminLayout title="Class Management">
+      <p className="text-muted-foreground font-body mb-6">Manage all classes, banners, and pricing.</p>
 
       {isLoading ? (
         <div className="flex justify-center py-20">
           <div className="h-8 w-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : !courses?.length ? (
-        <p className="text-center text-muted-foreground py-20">No courses yet.</p>
+        <p className="text-center text-muted-foreground py-20">No classes yet.</p>
       ) : (
         <Card className="overflow-hidden">
           <CardContent className="p-0">
@@ -201,7 +201,7 @@ const AdminCoursesPage = () => {
                           <Button variant="outline" size="sm" onClick={() => togglePublish.mutate({ id: c.id, published: !c.published })}>
                             {c.published ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                           </Button>
-                          <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this course?")) deleteCourse.mutate(c.id); }}>
+                          <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this class?")) deleteCourse.mutate(c.id); }}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -255,7 +255,7 @@ const AdminCoursesPage = () => {
                       <Button variant="outline" size="sm" onClick={() => togglePublish.mutate({ id: c.id, published: !c.published })}>
                         {c.published ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                       </Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this course?")) deleteCourse.mutate(c.id); }}>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={() => { if (confirm("Delete this class?")) deleteCourse.mutate(c.id); }}>
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
@@ -271,7 +271,7 @@ const AdminCoursesPage = () => {
       <Dialog open={!!pricingCourse} onOpenChange={() => setPricingCourse(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-heading">Set Course Price</DialogTitle>
+            <DialogTitle className="font-heading">Set Class Price</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground font-body">{pricingCourse?.title}</p>
           <div className="space-y-4 pt-2">
@@ -290,7 +290,7 @@ const AdminCoursesPage = () => {
       <Dialog open={!!bannerCourse} onOpenChange={() => setBannerCourse(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-heading">Course Banner</DialogTitle>
+            <DialogTitle className="font-heading">Class Banner</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground font-body">{bannerCourse?.title}</p>
           <div className="space-y-4 pt-2">

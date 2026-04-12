@@ -18,7 +18,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Users", url: "/admin/users", icon: Users },
-  { title: "Courses", url: "/admin/courses", icon: BookOpen },
+  { title: "Classes", url: "/admin/courses", icon: BookOpen },
   { title: "Donations", url: "/admin/donations", icon: Heart },
   { title: "Campaigns", url: "/admin/campaigns", icon: Target },
   { title: "Sponsorship", url: "/admin/sponsorship", icon: HandHeart },
