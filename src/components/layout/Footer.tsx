@@ -32,7 +32,7 @@ const Footer = () => {
               <Link to="/sponsor-a-student" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("nav.sponsor")}</Link>
               <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.contact")}</Link>
               <Link to="#" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">{t("footer.faq")}</Link>
-              <Link to="/privacy-policy.html" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">
+              <Link to="/privacy-policy" className="block text-sm text-primary-foreground/75 hover:text-accent-soft font-body transition-colors">
   Privacy Policy
 </Link>
             </div>
