@@ -29,7 +29,7 @@ import AdminSponsorshipPage from "./pages/admin/AdminSponsorshipPage";
 import CertificatePage from "./pages/CertificatePage";
 import DonatePage from "./pages/DonatePage";
 import SponsorStudentPage from "./pages/SponsorStudentPage";
-
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -94,6 +94,7 @@ const App = () => (
               }
             />
             {/* Admin routes */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsersPage /></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute requiredRole="admin"><AdminCoursesPage /></ProtectedRoute>} />
