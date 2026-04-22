@@ -1,3 +1,4 @@
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -29,7 +30,6 @@ import AdminSponsorshipPage from "./pages/admin/AdminSponsorshipPage";
 import CertificatePage from "./pages/CertificatePage";
 import DonatePage from "./pages/DonatePage";
 import SponsorStudentPage from "./pages/SponsorStudentPage";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -42,6 +42,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/courses" element={<Courses />} />
@@ -94,7 +95,6 @@ const App = () => (
               }
             />
             {/* Admin routes */}
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminUsersPage /></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute requiredRole="admin"><AdminCoursesPage /></ProtectedRoute>} />
@@ -107,6 +107,7 @@ const App = () => (
             <Route path="/certificate/:certificateId" element={<ProtectedRoute><CertificatePage /></ProtectedRoute>} />
             <Route path="/donate" element={<DonatePage />} />
             <Route path="/sponsor-a-student" element={<SponsorStudentPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
