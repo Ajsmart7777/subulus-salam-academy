@@ -45,16 +45,21 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
   const [donorPhone, setDonorPhone] = useState("");
   const [amount, setAmount] = useState(fixedAmount ?? 0);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const handleDonate = async () => {
-    if (!donorName.trim()) {
-      toast({ title: t("donate.name_required"), variant: "destructive" });
+    const result = donationSchema.safeParse({ donorName, donorEmail, donorPhone, amount });
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as keyof FieldErrors;
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast({ title: t("donate.error"), description: Object.values(fieldErrors)[0], variant: "destructive" });
       return;
     }
-    if (amount <= 0) {
-      toast({ title: t("donate.amount_required"), variant: "destructive" });
-      return;
-    }
+    setErrors({});
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("handle-donation", {
