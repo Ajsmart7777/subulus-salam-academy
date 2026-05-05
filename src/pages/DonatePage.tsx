@@ -92,26 +92,6 @@ const DonatePage = () => {
           )}
         </DialogContent>
       </Dialog>
-
-          {/* Campaigns */}
-          <div>
-            <h2 className="text-xl font-heading font-bold text-foreground mb-4">{t("donate.campaigns")}</h2>
-            {campaigns && campaigns.length > 0 ? (
-              <div className="space-y-4">
-                {campaigns.map((campaign: any) => (
-                  <CampaignCard
-                    key={campaign.id}
-                    campaign={campaign}
-                    onDonate={(id) => setSelectedCampaignId(id)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground font-body text-sm">{t("donate.no_campaigns")}</p>
-            )}
-          </div>
-        </div>
-      </div>
       <Footer />
     </div>
   );
