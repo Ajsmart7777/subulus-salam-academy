@@ -56,11 +56,42 @@ const DonatePage = () => {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Donation Form */}
           <div>
+            <DonationForm onSuccess={() => {}} />
+          </div>
+
+          {/* Campaigns */}
+          <div>
+            <h2 className="text-xl font-heading font-bold text-foreground mb-4">{t("donate.campaigns")}</h2>
+            {campaigns && campaigns.length > 0 ? (
+              <div className="space-y-4">
+                {campaigns.map((campaign: any) => (
+                  <CampaignCard
+                    key={campaign.id}
+                    campaign={campaign}
+                    onDonate={(id) => setSelectedCampaignId(id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground font-body text-sm">{t("donate.no_campaigns")}</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <Dialog open={!!selectedCampaignId} onOpenChange={(o) => !o && setSelectedCampaignId(undefined)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">{t("donate.donate_to_campaign")}</DialogTitle>
+          </DialogHeader>
+          {selectedCampaignId && (
             <DonationForm
               campaignId={selectedCampaignId}
               onSuccess={() => setSelectedCampaignId(undefined)}
             />
-          </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
           {/* Campaigns */}
           <div>
