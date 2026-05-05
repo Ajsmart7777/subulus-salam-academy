@@ -8,6 +8,7 @@ import { Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const donationSchema = z.object({
