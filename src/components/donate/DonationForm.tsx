@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+const donationSchema = z.object({
+  donorName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
+  donorEmail: z.string().trim().email("Invalid email address").max(255).optional().or(z.literal("")),
+  donorPhone: z
+    .string()
+    .trim()
+    .regex(/^[+\d][\d\s\-()]{6,19}$/, "Invalid phone number")
+    .optional()
+    .or(z.literal("")),
+  amount: z
+    .number({ invalid_type_error: "Amount is required" })
+    .int("Amount must be a whole number")
+    .min(100, "Minimum donation is ₦100")
+    .max(10000000, "Amount is too large"),
+});
+
+type FieldErrors = Partial<Record<"donorName" | "donorEmail" | "donorPhone" | "amount", string>>;
 
 interface DonationFormProps {
   campaignId?: string;
@@ -26,16 +45,21 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
   const [donorPhone, setDonorPhone] = useState("");
   const [amount, setAmount] = useState(fixedAmount ?? 0);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const handleDonate = async () => {
-    if (!donorName.trim()) {
-      toast({ title: t("donate.name_required"), variant: "destructive" });
+    const result = donationSchema.safeParse({ donorName, donorEmail, donorPhone, amount });
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as keyof FieldErrors;
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast({ title: t("donate.error"), description: Object.values(fieldErrors)[0], variant: "destructive" });
       return;
     }
-    if (amount <= 0) {
-      toast({ title: t("donate.amount_required"), variant: "destructive" });
-      return;
-    }
+    setErrors({});
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("handle-donation", {
@@ -107,15 +131,37 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
       <CardContent className="space-y-4">
         <div>
           <Label className="font-body">{t("donate.name")} *</Label>
-          <Input value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder={t("donate.name_placeholder")} />
+          <Input
+            value={donorName}
+            onChange={(e) => setDonorName(e.target.value)}
+            placeholder={t("donate.name_placeholder")}
+            maxLength={100}
+            aria-invalid={!!errors.donorName}
+          />
+          {errors.donorName && <p className="text-sm text-destructive mt-1">{errors.donorName}</p>}
         </div>
         <div>
           <Label className="font-body">{t("donate.email")}</Label>
-          <Input type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder={t("donate.email_placeholder")} />
+          <Input
+            type="email"
+            value={donorEmail}
+            onChange={(e) => setDonorEmail(e.target.value)}
+            placeholder={t("donate.email_placeholder")}
+            maxLength={255}
+            aria-invalid={!!errors.donorEmail}
+          />
+          {errors.donorEmail && <p className="text-sm text-destructive mt-1">{errors.donorEmail}</p>}
         </div>
         <div>
           <Label className="font-body">{t("donate.phone")}</Label>
-          <Input value={donorPhone} onChange={(e) => setDonorPhone(e.target.value)} placeholder={t("donate.phone_placeholder")} />
+          <Input
+            value={donorPhone}
+            onChange={(e) => setDonorPhone(e.target.value)}
+            placeholder={t("donate.phone_placeholder")}
+            maxLength={20}
+            aria-invalid={!!errors.donorPhone}
+          />
+          {errors.donorPhone && <p className="text-sm text-destructive mt-1">{errors.donorPhone}</p>}
         </div>
 
         {!fixedAmount && (
@@ -140,7 +186,10 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder={t("donate.custom_amount")}
               min={100}
+              max={10000000}
+              aria-invalid={!!errors.amount}
             />
+            {errors.amount && <p className="text-sm text-destructive mt-1">{errors.amount}</p>}
           </div>
         )}
 
