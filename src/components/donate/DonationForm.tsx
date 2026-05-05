@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+const donationSchema = z.object({
+  donorName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
+  donorEmail: z.string().trim().email("Invalid email address").max(255).optional().or(z.literal("")),
+  donorPhone: z
+    .string()
+    .trim()
+    .regex(/^[+\d][\d\s\-()]{6,19}$/, "Invalid phone number")
+    .optional()
+    .or(z.literal("")),
+  amount: z
+    .number({ invalid_type_error: "Amount is required" })
+    .int("Amount must be a whole number")
+    .min(100, "Minimum donation is ₦100")
+    .max(10000000, "Amount is too large"),
+});
+
+type FieldErrors = Partial<Record<"donorName" | "donorEmail" | "donorPhone" | "amount", string>>;
 
 interface DonationFormProps {
   campaignId?: string;
