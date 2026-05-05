@@ -131,15 +131,37 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
       <CardContent className="space-y-4">
         <div>
           <Label className="font-body">{t("donate.name")} *</Label>
-          <Input value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder={t("donate.name_placeholder")} />
+          <Input
+            value={donorName}
+            onChange={(e) => setDonorName(e.target.value)}
+            placeholder={t("donate.name_placeholder")}
+            maxLength={100}
+            aria-invalid={!!errors.donorName}
+          />
+          {errors.donorName && <p className="text-sm text-destructive mt-1">{errors.donorName}</p>}
         </div>
         <div>
           <Label className="font-body">{t("donate.email")}</Label>
-          <Input type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder={t("donate.email_placeholder")} />
+          <Input
+            type="email"
+            value={donorEmail}
+            onChange={(e) => setDonorEmail(e.target.value)}
+            placeholder={t("donate.email_placeholder")}
+            maxLength={255}
+            aria-invalid={!!errors.donorEmail}
+          />
+          {errors.donorEmail && <p className="text-sm text-destructive mt-1">{errors.donorEmail}</p>}
         </div>
         <div>
           <Label className="font-body">{t("donate.phone")}</Label>
-          <Input value={donorPhone} onChange={(e) => setDonorPhone(e.target.value)} placeholder={t("donate.phone_placeholder")} />
+          <Input
+            value={donorPhone}
+            onChange={(e) => setDonorPhone(e.target.value)}
+            placeholder={t("donate.phone_placeholder")}
+            maxLength={20}
+            aria-invalid={!!errors.donorPhone}
+          />
+          {errors.donorPhone && <p className="text-sm text-destructive mt-1">{errors.donorPhone}</p>}
         </div>
 
         {!fixedAmount && (
@@ -164,7 +186,10 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder={t("donate.custom_amount")}
               min={100}
+              max={10000000}
+              aria-invalid={!!errors.amount}
             />
+            {errors.amount && <p className="text-sm text-destructive mt-1">{errors.amount}</p>}
           </div>
         )}
 
