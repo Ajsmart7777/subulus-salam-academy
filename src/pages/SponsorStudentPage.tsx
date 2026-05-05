@@ -17,39 +17,18 @@ const SponsorStudentPage = () => {
   const { data: requests } = useQuery({
     queryKey: ["pending-sponsorships"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("student_sponsorship_requests")
-        .select("id, reason, course_id, student_user_id")
-        .eq("status", "pending")
-        .order("created_at", { ascending: false });
-      if (!data?.length) return [];
-
-      const courseIds = [...new Set(data.map((r) => r.course_id))];
-      const userIds = [...new Set(data.map((r) => r.student_user_id))];
-
-      const [coursesRes, profilesRes] = await Promise.all([
-        supabase.from("courses").select("id, title, price, level").in("id", courseIds),
-        supabase.from("profiles").select("user_id, full_name").in("user_id", userIds),
-      ]);
-
-      const courseMap = new Map((coursesRes.data ?? []).map((c) => [c.id, c]));
-      const profileMap = new Map((profilesRes.data ?? []).map((p) => [p.user_id, p]));
-
-      return data.map((r) => {
-        const course = courseMap.get(r.course_id);
-        const profile = profileMap.get(r.student_user_id);
-        const firstName = profile?.full_name?.split(" ")[0] || "Student";
-        return {
-          id: r.id,
-          reason: r.reason,
-          studentFirstName: firstName,
-          course: {
-            title: course?.title ?? "Course",
-            price: Number(course?.price ?? 0),
-            level: course?.level ?? "Beginner",
-          },
-        };
-      });
+      const { data, error } = await supabase.rpc("get_public_pending_sponsorships");
+      if (error) throw error;
+      return (data ?? []).map((r: any) => ({
+        id: r.id,
+        reason: null,
+        studentFirstName: r.student_first_name || "Student",
+        course: {
+          title: r.course_title ?? "Course",
+          price: Number(r.course_price ?? 0),
+          level: r.course_level ?? "Beginner",
+        },
+      }));
     },
   });
 
