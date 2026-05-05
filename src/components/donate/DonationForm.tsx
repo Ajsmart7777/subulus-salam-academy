@@ -8,6 +8,7 @@ import { Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const donationSchema = z.object({
@@ -95,20 +96,49 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
             logo: "",
           },
           callback: async (response: any) => {
-            try {
-              const { data: verifyData } = await supabase.functions.invoke("handle-donation", {
-                body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref },
-              });
-              if (verifyData?.success) {
-                toast({ title: t("donate.success"), description: t("donate.success_desc") });
-                onSuccess?.();
-              } else {
-                toast({ title: t("donate.failed"), description: verifyData?.message, variant: "destructive" });
+            const verifyWithRetry = async (attempt = 1): Promise<void> => {
+              try {
+                const { data: verifyData, error: verifyError } = await supabase.functions.invoke("handle-donation", {
+                  body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref },
+                });
+                if (verifyError) throw new Error(verifyError.message);
+                if (verifyData?.success) {
+                  toast({ title: t("donate.success"), description: t("donate.success_desc") });
+                  onSuccess?.();
+                  setLoading(false);
+                  return;
+                }
+                // Verification returned failure
+                toast({
+                  title: t("donate.failed") || "Payment verification failed",
+                  description: `${verifyData?.message || "We couldn't confirm your payment."} Reference: ${flw_ref}. If your account was charged, contact support@sabiluljannah.com with this reference — no duplicate charge will occur.`,
+                  variant: "destructive",
+                  action: (
+                    <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
+                      Retry
+                    </ToastAction>
+                  ),
+                });
+                setLoading(false);
+              } catch (err: any) {
+                if (attempt < 3) {
+                  await new Promise((r) => setTimeout(r, 1500 * attempt));
+                  return verifyWithRetry(attempt + 1);
+                }
+                toast({
+                  title: "Verification error",
+                  description: `We couldn't reach the server to confirm your payment (${err.message}). Reference: ${flw_ref}. Please check your connection and retry, or contact support@sabiluljannah.com with this reference.`,
+                  variant: "destructive",
+                  action: (
+                    <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
+                      Retry
+                    </ToastAction>
+                  ),
+                });
+                setLoading(false);
               }
-            } catch (err: any) {
-              toast({ title: "Error", description: err.message, variant: "destructive" });
-            }
-            setLoading(false);
+            };
+            verifyWithRetry();
           },
           onclose: () => setLoading(false),
         });
