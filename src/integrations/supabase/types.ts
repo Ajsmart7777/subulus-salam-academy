@@ -716,6 +716,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_pending_sponsorships: {
+        Args: never
+        Returns: {
+          course_id: string
+          course_level: string
+          course_price: number
+          course_title: string
+          id: string
+          student_first_name: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
