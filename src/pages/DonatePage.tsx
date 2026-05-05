@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const DonatePage = () => {
   const { t } = useLanguage();
@@ -55,10 +56,7 @@ const DonatePage = () => {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Donation Form */}
           <div>
-            <DonationForm
-              campaignId={selectedCampaignId}
-              onSuccess={() => setSelectedCampaignId(undefined)}
-            />
+            <DonationForm onSuccess={() => {}} />
           </div>
 
           {/* Campaigns */}
@@ -80,6 +78,20 @@ const DonatePage = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={!!selectedCampaignId} onOpenChange={(o) => !o && setSelectedCampaignId(undefined)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">{t("donate.donate_to_campaign")}</DialogTitle>
+          </DialogHeader>
+          {selectedCampaignId && (
+            <DonationForm
+              campaignId={selectedCampaignId}
+              onSuccess={() => setSelectedCampaignId(undefined)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );
