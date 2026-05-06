@@ -30,6 +30,7 @@ import AdminSponsorshipPage from "./pages/admin/AdminSponsorshipPage";
 import CertificatePage from "./pages/CertificatePage";
 import DonatePage from "./pages/DonatePage";
 import SponsorStudentPage from "./pages/SponsorStudentPage";
+import InstallPrompt from "./components/InstallPrompt";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -38,6 +39,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <InstallPrompt />
       <BrowserRouter>
         <AuthProvider>
           <Routes>
