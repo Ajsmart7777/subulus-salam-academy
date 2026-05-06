@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
+import { loadFlutterwave, preloadFlutterwave } from "@/lib/flutterwave";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,6 +49,8 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  useEffect(() => { preloadFlutterwave(); }, []);
+
   const handleDonate = async () => {
     const result = donationSchema.safeParse({ donorName, donorEmail, donorPhone, amount });
     if (!result.success) {
@@ -80,70 +83,65 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
       if (data?.error) throw new Error(data.error);
 
       const { flw_public_key, flw_ref } = data;
-      const script = document.createElement("script");
-      script.src = "https://checkout.flutterwave.com/v3.js";
-      script.onload = () => {
-        (window as any).FlutterwaveCheckout({
-          public_key: flw_public_key,
-          tx_ref: flw_ref,
-          amount,
-          currency: "NGN",
-          payment_options: "card,banktransfer,ussd",
-          customer: { email: donorEmail || "donor@sabiluljannah.com", name: donorName, phone_number: donorPhone },
-          customizations: {
-            title: "Sabilul Jannah International Online Islamiyya",
-            description: sponsorshipRequestId ? "Student Sponsorship" : campaignId ? "Campaign Donation" : "General Donation",
-            logo: "",
-          },
-          callback: async (response: any) => {
-            const verifyWithRetry = async (attempt = 1): Promise<void> => {
-              try {
-                const { data: verifyData, error: verifyError } = await supabase.functions.invoke("handle-donation", {
-                  body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref },
-                });
-                if (verifyError) throw new Error(verifyError.message);
-                if (verifyData?.success) {
-                  toast({ title: t("donate.success"), description: t("donate.success_desc") });
-                  onSuccess?.();
-                  setLoading(false);
-                  return;
-                }
-                // Verification returned failure
-                toast({
-                  title: t("donate.failed") || "Payment verification failed",
-                  description: `${verifyData?.message || "We couldn't confirm your payment."} Reference: ${flw_ref}. If your account was charged, contact support@sabiluljannah.com with this reference — no duplicate charge will occur.`,
-                  variant: "destructive",
-                  action: (
-                    <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
-                      Retry
-                    </ToastAction>
-                  ),
-                });
+      await loadFlutterwave();
+      (window as any).FlutterwaveCheckout({
+        public_key: flw_public_key,
+        tx_ref: flw_ref,
+        amount,
+        currency: "NGN",
+        payment_options: "card,banktransfer,ussd",
+        customer: { email: donorEmail || "donor@sabiluljannah.com", name: donorName, phone_number: donorPhone },
+        customizations: {
+          title: "Sabilul Jannah International Online Islamiyya",
+          description: sponsorshipRequestId ? "Student Sponsorship" : campaignId ? "Campaign Donation" : "General Donation",
+          logo: "",
+        },
+        callback: async (response: any) => {
+          const verifyWithRetry = async (attempt = 1): Promise<void> => {
+            try {
+              const { data: verifyData, error: verifyError } = await supabase.functions.invoke("handle-donation", {
+                body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref },
+              });
+              if (verifyError) throw new Error(verifyError.message);
+              if (verifyData?.success) {
+                toast({ title: t("donate.success"), description: t("donate.success_desc") });
+                onSuccess?.();
                 setLoading(false);
-              } catch (err: any) {
-                if (attempt < 3) {
-                  await new Promise((r) => setTimeout(r, 1500 * attempt));
-                  return verifyWithRetry(attempt + 1);
-                }
-                toast({
-                  title: "Verification error",
-                  description: `We couldn't reach the server to confirm your payment (${err.message}). Reference: ${flw_ref}. Please check your connection and retry, or contact support@sabiluljannah.com with this reference.`,
-                  variant: "destructive",
-                  action: (
-                    <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
-                      Retry
-                    </ToastAction>
-                  ),
-                });
-                setLoading(false);
+                return;
               }
-            };
-            verifyWithRetry();
-          },
-          onclose: () => setLoading(false),
-        });
-      };
-      document.head.appendChild(script);
+              toast({
+                title: t("donate.failed") || "Payment verification failed",
+                description: `${verifyData?.message || "We couldn't confirm your payment."} Reference: ${flw_ref}. If your account was charged, contact support@sabiluljannah.com with this reference — no duplicate charge will occur.`,
+                variant: "destructive",
+                action: (
+                  <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
+                    Retry
+                  </ToastAction>
+                ),
+              });
+              setLoading(false);
+            } catch (err: any) {
+              if (attempt < 3) {
+                await new Promise((r) => setTimeout(r, 1500 * attempt));
+                return verifyWithRetry(attempt + 1);
+              }
+              toast({
+                title: "Verification error",
+                description: `We couldn't reach the server to confirm your payment (${err.message}). Reference: ${flw_ref}. Please check your connection and retry, or contact support@sabiluljannah.com with this reference.`,
+                variant: "destructive",
+                action: (
+                  <ToastAction altText="Retry verification" onClick={() => { setLoading(true); verifyWithRetry(1); }}>
+                    Retry
+                  </ToastAction>
+                ),
+              });
+              setLoading(false);
+            }
+          };
+          verifyWithRetry();
+        },
+        onclose: () => setLoading(false),
+      });
     } catch (err: any) {
       toast({ title: t("donate.error"), description: err.message, variant: "destructive" });
       setLoading(false);
