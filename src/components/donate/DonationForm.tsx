@@ -49,6 +49,8 @@ const DonationForm = ({ campaignId, sponsorshipRequestId, fixedAmount, onSuccess
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  useEffect(() => { preloadFlutterwave(); }, []);
+
   const handleDonate = async () => {
     const result = donationSchema.safeParse({ donorName, donorEmail, donorPhone, amount });
     if (!result.success) {
