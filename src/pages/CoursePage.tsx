@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { loadFlutterwave, preloadFlutterwave } from "@/lib/flutterwave";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -33,6 +34,8 @@ const CoursePage = () => {
   const [sponsorReason, setSponsorReason] = useState("");
   const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => { preloadFlutterwave(); }, []);
 
   const { data: course, isLoading: courseLoading } = useQuery({
     queryKey: ["course", courseId],
@@ -176,32 +179,28 @@ const CoursePage = () => {
       if (error) throw new Error(error.message);
       if (data?.error) throw new Error(data.error);
       const { flw_public_key, flw_ref } = data;
-      const script = document.createElement("script");
-      script.src = "https://checkout.flutterwave.com/v3.js";
-      script.onload = () => {
-        (window as any).FlutterwaveCheckout({
-          public_key: flw_public_key, tx_ref: flw_ref, amount: coursePrice, currency: "NGN",
-          payment_options: "card,banktransfer,ussd",
-          customer: { email: user.email ?? "" },
-          customizations: { title: "Sabilul Jannah International Online Islamiyya", description: `Enrollment: ${course?.title}`, logo: "" },
-          callback: async (response: any) => {
-            try {
-              const { data: verifyData } = await supabase.functions.invoke("handle-payment", {
-                body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref, user_id: user.id, course_id: courseId },
-              });
-              if (verifyData?.success) {
-                queryClient.invalidateQueries({ queryKey: ["enrollment", courseId] });
-                toast({ title: t("course.enrolled"), description: t("course.enrolled_desc") });
-              } else {
-                toast({ title: "Verification failed", description: verifyData?.message, variant: "destructive" });
-              }
-            } catch (err: any) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
-            setPaymentLoading(false);
-          },
-          onclose: () => setPaymentLoading(false),
-        });
-      };
-      document.head.appendChild(script);
+      await loadFlutterwave();
+      (window as any).FlutterwaveCheckout({
+        public_key: flw_public_key, tx_ref: flw_ref, amount: coursePrice, currency: "NGN",
+        payment_options: "card,banktransfer,ussd",
+        customer: { email: user.email ?? "" },
+        customizations: { title: "Sabilul Jannah International Online Islamiyya", description: `Enrollment: ${course?.title}`, logo: "" },
+        callback: async (response: any) => {
+          try {
+            const { data: verifyData } = await supabase.functions.invoke("handle-payment", {
+              body: { action: "verify", transaction_id: response.transaction_id, tx_ref: flw_ref, user_id: user.id, course_id: courseId },
+            });
+            if (verifyData?.success) {
+              queryClient.invalidateQueries({ queryKey: ["enrollment", courseId] });
+              toast({ title: t("course.enrolled"), description: t("course.enrolled_desc") });
+            } else {
+              toast({ title: "Verification failed", description: verifyData?.message, variant: "destructive" });
+            }
+          } catch (err: any) { toast({ title: "Error", description: err.message, variant: "destructive" }); }
+          setPaymentLoading(false);
+        },
+        onclose: () => setPaymentLoading(false),
+      });
     } catch (err: any) {
       toast({ title: t("course.payment_error"), description: err.message, variant: "destructive" });
       setPaymentLoading(false);
