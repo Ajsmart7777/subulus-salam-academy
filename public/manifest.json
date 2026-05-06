@@ -1,0 +1,15 @@
+{
+  "name": "Sabilul Jannah International Online Islamiyya",
+  "short_name": "Sabilul Jannah",
+  "description": "Structured Islamic education for the modern learner. Learn Quran, Hadith, Arabic and more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f0",
+  "theme_color": "#1a5d4a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
