@@ -31,6 +31,7 @@ import CertificatePage from "./pages/CertificatePage";
 import DonatePage from "./pages/DonatePage";
 import SponsorStudentPage from "./pages/SponsorStudentPage";
 import InstallPrompt from "./components/InstallPrompt";
+import OfflineBadge from "./components/OfflineBadge";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -40,6 +41,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <InstallPrompt />
+      <OfflineBadge />
       <BrowserRouter>
         <AuthProvider>
           <Routes>

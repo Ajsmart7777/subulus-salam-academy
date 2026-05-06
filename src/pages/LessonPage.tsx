@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { withOfflineCache } from "@/lib/offlineCache";
 
 const LessonPage = () => {
   const { courseId, lessonId } = useParams();
@@ -18,12 +19,19 @@ const LessonPage = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["lesson", lessonId],
-    queryFn: async () => {
-      const { data: lesson, error } = await supabase.from("lessons").select("*, modules:module_id(title, week, course_id)").eq("id", lessonId!).single();
-      if (error) throw error;
-      return lesson;
-    },
+    queryFn: () =>
+      withOfflineCache(`lesson:${lessonId}`, async () => {
+        const { data: lesson, error } = await supabase
+          .from("lessons")
+          .select("*, modules:module_id(title, week, course_id)")
+          .eq("id", lessonId!)
+          .single();
+        if (error) throw error;
+        return lesson;
+      }),
     enabled: !!lessonId,
+    staleTime: 1000 * 60 * 5,
+    networkMode: "offlineFirst",
   });
 
   const { data: progressData } = useQuery({
