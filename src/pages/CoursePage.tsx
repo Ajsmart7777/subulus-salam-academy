@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Lock, CheckCircle2, Circle, PlayCircle, FileText, Headphones,
   ClipboardList, HelpCircle, ChevronRight, Award, CreditCard, HandHeart,
+  Download, Loader2, CheckCheck,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { withOfflineCache } from "@/lib/offlineCache";
+import { withOfflineCache, downloadCourseForOffline, isCourseDownloaded } from "@/lib/offlineCache";
 
 const lessonIcon = (type: string) => {
   switch (type) {
@@ -34,7 +35,14 @@ const CoursePage = () => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [sponsorReason, setSponsorReason] = useState("");
   const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [downloaded, setDownloaded] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (courseId) setDownloaded(isCourseDownloaded(courseId));
+  }, [courseId]);
 
   useEffect(() => { preloadFlutterwave(); }, []);
 
@@ -214,6 +222,55 @@ const CoursePage = () => {
     }
   };
 
+  const handleDownloadOffline = async () => {
+    if (!courseId) return;
+    setDownloading(true);
+    setDownloadProgress(0);
+    try {
+      await downloadCourseForOffline(
+        courseId,
+        {
+          fetchCourse: async () => {
+            const { data, error } = await supabase.from("courses").select("*").eq("id", courseId).single();
+            if (error) throw error;
+            return data;
+          },
+          fetchModules: async () => {
+            const { data: mods, error } = await supabase.from("modules").select("*").eq("course_id", courseId).order("sort_order");
+            if (error) throw error;
+            const moduleIds = mods.map((m) => m.id);
+            const [lessonsRes, assignmentsRes] = await Promise.all([
+              supabase.from("lessons").select("*").in("module_id", moduleIds).order("sort_order"),
+              supabase.from("assignments").select("*").in("module_id", moduleIds),
+            ]);
+            return mods.map((m) => ({
+              ...m,
+              lessons: (lessonsRes.data ?? []).filter((l: any) => l.module_id === m.id),
+              assignments: (assignmentsRes.data ?? []).filter((a: any) => a.module_id === m.id),
+            }));
+          },
+          fetchLesson: async (lessonId: string) => {
+            const { data, error } = await supabase
+              .from("lessons")
+              .select("*, modules:module_id(title, week, course_id)")
+              .eq("id", lessonId)
+              .single();
+            if (error) throw error;
+            return data;
+          },
+        },
+        (done, total) => setDownloadProgress(Math.round((done / total) * 100)),
+      );
+      setDownloaded(true);
+      queryClient.invalidateQueries({ queryKey: ["course-modules", courseId] });
+      toast({ title: "Available offline", description: "All modules, lessons and materials are saved for offline access." });
+    } catch (err: any) {
+      toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true;
     if (!modules || !progress || !submissions) return false;
@@ -275,11 +332,28 @@ const CoursePage = () => {
             <p className="text-sm text-primary-foreground/70 font-body mb-6 max-w-2xl">{course.description}</p>
 
             {isEnrolled && (
-              <div className="max-w-sm">
-                <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
-                  <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+              <div className="max-w-sm space-y-4">
+                <div>
+                  <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
+                    <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+                  </div>
+                  <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
                 </div>
-                <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                  onClick={handleDownloadOffline}
+                  disabled={downloading}
+                >
+                  {downloading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
+                  ) : downloaded ? (
+                    <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
+                  ) : (
+                    <><Download className="h-4 w-4" /> Download for offline</>
+                  )}
+                </Button>
               </div>
             )}
 
