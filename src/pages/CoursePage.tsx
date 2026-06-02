@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { loadFlutterwave, preloadFlutterwave } from "@/lib/flutterwave";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
