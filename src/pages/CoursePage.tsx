@@ -334,11 +334,28 @@ const CoursePage = () => {
             <p className="text-sm text-primary-foreground/70 font-body mb-6 max-w-2xl">{course.description}</p>
 
             {isEnrolled && (
-              <div className="max-w-sm">
-                <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
-                  <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+              <div className="max-w-sm space-y-4">
+                <div>
+                  <div className="flex justify-between text-xs text-primary-foreground/60 font-body mb-1">
+                    <span>{t("course.progress")}</span><span>{overallProgress}%</span>
+                  </div>
+                  <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
                 </div>
-                <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                  onClick={handleDownloadOffline}
+                  disabled={downloading}
+                >
+                  {downloading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
+                  ) : downloaded ? (
+                    <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
+                  ) : (
+                    <><Download className="h-4 w-4" /> Download for offline</>
+                  )}
+                </Button>
               </div>
             )}
 
