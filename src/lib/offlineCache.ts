@@ -118,10 +118,53 @@ const markCourseDownloaded = (courseId: string) => {
 
 type ProgressCb = (done: number, total: number) => void;
 
+const PARTIAL_KEY = (courseId: string) => `sj_download_partial:${courseId}`;
+
+export class DownloadCancelledError extends Error {
+  constructor() {
+    super("Download cancelled");
+    this.name = "DownloadCancelledError";
+  }
+}
+
+/** Resume state for a paused/incomplete download, if any. */
+export const getCourseDownloadState = (
+  courseId: string,
+): { done: number; total: number } | null => {
+  try {
+    const raw = localStorage.getItem(PARTIAL_KEY(courseId));
+    return raw ? (JSON.parse(raw) as { done: number; total: number }) : null;
+  } catch {
+    return null;
+  }
+};
+
+const setPartial = (courseId: string, done: number, total: number) => {
+  try {
+    localStorage.setItem(PARTIAL_KEY(courseId), JSON.stringify({ done, total }));
+  } catch {
+    /* ignore */
+  }
+};
+
+const clearPartial = (courseId: string) => {
+  try {
+    localStorage.removeItem(PARTIAL_KEY(courseId));
+  } catch {
+    /* ignore */
+  }
+};
+
+/** Discard any saved partial-download progress for a course. */
+export const clearCourseDownloadState = (courseId: string) => clearPartial(courseId);
+
 /**
  * Pre-cache a course's data (course record, modules, lessons, assignments)
  * plus any lesson media URLs so an installed user can open everything offline.
  * `fetchers` are injected to avoid importing the supabase client here.
+ *
+ * Supports cancel (via `signal`) and resume: lessons already present in the
+ * cache are skipped, so a stopped download continues where it left off.
  */
 export async function downloadCourseForOffline(
   courseId: string,
@@ -131,8 +174,14 @@ export async function downloadCourseForOffline(
     fetchLesson: (lessonId: string) => Promise<unknown>;
   },
   onProgress?: ProgressCb,
+  signal?: AbortSignal,
 ): Promise<void> {
+  const throwIfCancelled = () => {
+    if (signal?.aborted) throw new DownloadCancelledError();
+  };
+
   // 1. Course + modules bundle (same keys used by CoursePage queries)
+  throwIfCancelled();
   const course = await fetchers.fetchCourse();
   await cacheSet(`course:${courseId}`, course);
 
@@ -145,28 +194,39 @@ export async function downloadCourseForOffline(
   const total = lessons.length || 1;
   let done = 0;
   onProgress?.(done, total);
+  setPartial(courseId, done, total);
 
-  // 3. Cache each lesson individually (same key used by LessonPage)
+  // 3. Cache each lesson individually (same key used by LessonPage).
+  //    Skip lessons already cached so resume continues where it stopped.
   for (const lesson of lessons) {
+    throwIfCancelled();
     const id = lesson.id as string;
     try {
-      const full = await fetchers.fetchLesson(id);
-      await cacheSet(`lesson:${id}`, full);
+      const already = await cacheGet(`lesson:${id}`);
+      if (already === null) {
+        const full = await fetchers.fetchLesson(id);
+        await cacheSet(`lesson:${id}`, full);
+      }
       const url = (lesson.content_url as string) || "";
       if (url) mediaUrls.push(url);
-    } catch {
+    } catch (err) {
+      if (err instanceof DownloadCancelledError) throw err;
       /* skip lessons that fail; partial download is still useful */
     }
     done += 1;
     onProgress?.(done, total);
+    setPartial(courseId, done, total);
   }
 
   // 4. Warm the browser HTTP cache for lesson materials (best-effort)
+  throwIfCancelled();
   await Promise.allSettled(
     mediaUrls.map((url) =>
-      fetch(url, { mode: "no-cors", cache: "force-cache" }).catch(() => undefined),
+      fetch(url, { mode: "no-cors", cache: "force-cache", signal }).catch(() => undefined),
     ),
   );
 
+  throwIfCancelled();
+  clearPartial(courseId);
   markCourseDownloaded(courseId);
 }

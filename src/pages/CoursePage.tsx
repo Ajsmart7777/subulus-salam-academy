@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { loadFlutterwave, preloadFlutterwave } from "@/lib/flutterwave";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Lock, CheckCircle2, Circle, PlayCircle, FileText, Headphones,
   ClipboardList, HelpCircle, ChevronRight, Award, CreditCard, HandHeart,
-  Download, Loader2, CheckCheck,
+  Download, Loader2, CheckCheck, X, RotateCcw,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,7 +18,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { withOfflineCache, downloadCourseForOffline, isCourseDownloaded } from "@/lib/offlineCache";
+import {
+  withOfflineCache, downloadCourseForOffline, isCourseDownloaded,
+  getCourseDownloadState, DownloadCancelledError,
+} from "@/lib/offlineCache";
 
 const lessonIcon = (type: string) => {
   switch (type) {
@@ -38,11 +41,21 @@ const CoursePage = () => {
   const [downloading, setDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloaded, setDownloaded] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (courseId) setDownloaded(isCourseDownloaded(courseId));
+    if (!courseId) return;
+    setDownloaded(isCourseDownloaded(courseId));
+    const partial = getCourseDownloadState(courseId);
+    if (partial && !isCourseDownloaded(courseId)) {
+      setPaused(true);
+      setDownloadProgress(Math.round((partial.done / (partial.total || 1)) * 100));
+    }
   }, [courseId]);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => { preloadFlutterwave(); }, []);
 
@@ -224,8 +237,10 @@ const CoursePage = () => {
 
   const handleDownloadOffline = async () => {
     if (!courseId) return;
+    const controller = new AbortController();
+    abortRef.current = controller;
     setDownloading(true);
-    setDownloadProgress(0);
+    setPaused(false);
     try {
       await downloadCourseForOffline(
         courseId,
@@ -260,16 +275,30 @@ const CoursePage = () => {
           },
         },
         (done, total) => setDownloadProgress(Math.round((done / total) * 100)),
+        controller.signal,
       );
       setDownloaded(true);
+      setPaused(false);
       queryClient.invalidateQueries({ queryKey: ["course-modules", courseId] });
       toast({ title: "Available offline", description: "All modules, lessons and materials are saved for offline access." });
     } catch (err: any) {
-      toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+      if (err instanceof DownloadCancelledError) {
+        setPaused(true);
+        toast({ title: "Download paused", description: "Your progress is saved. Resume anytime to continue." });
+      } else {
+        toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+      }
     } finally {
+      abortRef.current = null;
       setDownloading(false);
     }
   };
+
+  const handleCancelDownload = () => {
+    abortRef.current?.abort();
+  };
+
+
 
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true;
@@ -339,21 +368,35 @@ const CoursePage = () => {
                   </div>
                   <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-                  onClick={handleDownloadOffline}
-                  disabled={downloading}
-                >
-                  {downloading ? (
-                    <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
-                  ) : downloaded ? (
-                    <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
-                  ) : (
-                    <><Download className="h-4 w-4" /> Download for offline</>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                    onClick={handleDownloadOffline}
+                    disabled={downloading}
+                  >
+                    {downloading ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
+                    ) : downloaded ? (
+                      <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
+                    ) : paused ? (
+                      <><RotateCcw className="h-4 w-4" /> Resume download · {downloadProgress}%</>
+                    ) : (
+                      <><Download className="h-4 w-4" /> Download for offline</>
+                    )}
+                  </Button>
+                  {downloading && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                      onClick={handleCancelDownload}
+                    >
+                      <X className="h-4 w-4" /> Cancel
+                    </Button>
                   )}
-                </Button>
+                </div>
               </div>
             )}
 
