@@ -41,11 +41,21 @@ const CoursePage = () => {
   const [downloading, setDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloaded, setDownloaded] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (courseId) setDownloaded(isCourseDownloaded(courseId));
+    if (!courseId) return;
+    setDownloaded(isCourseDownloaded(courseId));
+    const partial = getCourseDownloadState(courseId);
+    if (partial && !isCourseDownloaded(courseId)) {
+      setPaused(true);
+      setDownloadProgress(Math.round((partial.done / (partial.total || 1)) * 100));
+    }
   }, [courseId]);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => { preloadFlutterwave(); }, []);
 
