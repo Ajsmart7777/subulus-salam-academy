@@ -88,3 +88,85 @@ export async function withOfflineCache<T>(
 
 export const isOnline = () =>
   typeof navigator === "undefined" ? true : navigator.onLine;
+
+// ---- Course pre-caching for full offline access ----
+
+const DOWNLOADED_KEY = "sj_downloaded_courses";
+
+export const isCourseDownloaded = (courseId: string): boolean => {
+  try {
+    const raw = localStorage.getItem(DOWNLOADED_KEY);
+    const ids: string[] = raw ? JSON.parse(raw) : [];
+    return ids.includes(courseId);
+  } catch {
+    return false;
+  }
+};
+
+const markCourseDownloaded = (courseId: string) => {
+  try {
+    const raw = localStorage.getItem(DOWNLOADED_KEY);
+    const ids: string[] = raw ? JSON.parse(raw) : [];
+    if (!ids.includes(courseId)) {
+      ids.push(courseId);
+      localStorage.setItem(DOWNLOADED_KEY, JSON.stringify(ids));
+    }
+  } catch {
+    /* ignore */
+  }
+};
+
+type ProgressCb = (done: number, total: number) => void;
+
+/**
+ * Pre-cache a course's data (course record, modules, lessons, assignments)
+ * plus any lesson media URLs so an installed user can open everything offline.
+ * `fetchers` are injected to avoid importing the supabase client here.
+ */
+export async function downloadCourseForOffline(
+  courseId: string,
+  fetchers: {
+    fetchCourse: () => Promise<unknown>;
+    fetchModules: () => Promise<Array<{ lessons?: Array<Record<string, unknown>> }>>;
+    fetchLesson: (lessonId: string) => Promise<unknown>;
+  },
+  onProgress?: ProgressCb,
+): Promise<void> {
+  // 1. Course + modules bundle (same keys used by CoursePage queries)
+  const course = await fetchers.fetchCourse();
+  await cacheSet(`course:${courseId}`, course);
+
+  const modules = await fetchers.fetchModules();
+  await cacheSet(`course-modules:${courseId}`, modules);
+
+  // 2. Collect all lessons across modules
+  const lessons = modules.flatMap((m) => m.lessons ?? []);
+  const mediaUrls: string[] = [];
+  const total = lessons.length || 1;
+  let done = 0;
+  onProgress?.(done, total);
+
+  // 3. Cache each lesson individually (same key used by LessonPage)
+  for (const lesson of lessons) {
+    const id = lesson.id as string;
+    try {
+      const full = await fetchers.fetchLesson(id);
+      await cacheSet(`lesson:${id}`, full);
+      const url = (lesson.content_url as string) || "";
+      if (url) mediaUrls.push(url);
+    } catch {
+      /* skip lessons that fail; partial download is still useful */
+    }
+    done += 1;
+    onProgress?.(done, total);
+  }
+
+  // 4. Warm the browser HTTP cache for lesson materials (best-effort)
+  await Promise.allSettled(
+    mediaUrls.map((url) =>
+      fetch(url, { mode: "no-cors", cache: "force-cache" }).catch(() => undefined),
+    ),
+  );
+
+  markCourseDownloaded(courseId);
+}
