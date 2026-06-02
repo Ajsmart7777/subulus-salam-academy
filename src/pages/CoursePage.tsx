@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Lock, CheckCircle2, Circle, PlayCircle, FileText, Headphones,
   ClipboardList, HelpCircle, ChevronRight, Award, CreditCard, HandHeart,
-  Download, Loader2, CheckCheck,
+  Download, Loader2, CheckCheck, X, RotateCcw,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,7 +18,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { withOfflineCache, downloadCourseForOffline, isCourseDownloaded } from "@/lib/offlineCache";
+import {
+  withOfflineCache, downloadCourseForOffline, isCourseDownloaded,
+  getCourseDownloadState, DownloadCancelledError,
+} from "@/lib/offlineCache";
 
 const lessonIcon = (type: string) => {
   switch (type) {
