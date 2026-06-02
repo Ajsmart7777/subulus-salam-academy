@@ -237,8 +237,10 @@ const CoursePage = () => {
 
   const handleDownloadOffline = async () => {
     if (!courseId) return;
+    const controller = new AbortController();
+    abortRef.current = controller;
     setDownloading(true);
-    setDownloadProgress(0);
+    setPaused(false);
     try {
       await downloadCourseForOffline(
         courseId,
@@ -273,16 +275,30 @@ const CoursePage = () => {
           },
         },
         (done, total) => setDownloadProgress(Math.round((done / total) * 100)),
+        controller.signal,
       );
       setDownloaded(true);
+      setPaused(false);
       queryClient.invalidateQueries({ queryKey: ["course-modules", courseId] });
       toast({ title: "Available offline", description: "All modules, lessons and materials are saved for offline access." });
     } catch (err: any) {
-      toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+      if (err instanceof DownloadCancelledError) {
+        setPaused(true);
+        toast({ title: "Download paused", description: "Your progress is saved. Resume anytime to continue." });
+      } else {
+        toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+      }
     } finally {
+      abortRef.current = null;
       setDownloading(false);
     }
   };
+
+  const handleCancelDownload = () => {
+    abortRef.current?.abort();
+  };
+
+
 
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true;
