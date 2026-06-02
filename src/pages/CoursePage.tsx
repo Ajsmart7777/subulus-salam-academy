@@ -271,8 +271,6 @@ const CoursePage = () => {
     }
   };
 
-
-
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true;
     if (!modules || !progress || !submissions) return false;
