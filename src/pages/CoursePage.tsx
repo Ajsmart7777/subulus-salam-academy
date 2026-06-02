@@ -35,7 +35,14 @@ const CoursePage = () => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [sponsorReason, setSponsorReason] = useState("");
   const [sponsorDialogOpen, setSponsorDialogOpen] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [downloaded, setDownloaded] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (courseId) setDownloaded(isCourseDownloaded(courseId));
+  }, [courseId]);
 
   useEffect(() => { preloadFlutterwave(); }, []);
 
