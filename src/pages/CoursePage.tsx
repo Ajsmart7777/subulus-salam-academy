@@ -222,6 +222,57 @@ const CoursePage = () => {
     }
   };
 
+  const handleDownloadOffline = async () => {
+    if (!courseId) return;
+    setDownloading(true);
+    setDownloadProgress(0);
+    try {
+      await downloadCourseForOffline(
+        courseId,
+        {
+          fetchCourse: async () => {
+            const { data, error } = await supabase.from("courses").select("*").eq("id", courseId).single();
+            if (error) throw error;
+            return data;
+          },
+          fetchModules: async () => {
+            const { data: mods, error } = await supabase.from("modules").select("*").eq("course_id", courseId).order("sort_order");
+            if (error) throw error;
+            const moduleIds = mods.map((m) => m.id);
+            const [lessonsRes, assignmentsRes] = await Promise.all([
+              supabase.from("lessons").select("*").in("module_id", moduleIds).order("sort_order"),
+              supabase.from("assignments").select("*").in("module_id", moduleIds),
+            ]);
+            return mods.map((m) => ({
+              ...m,
+              lessons: (lessonsRes.data ?? []).filter((l: any) => l.module_id === m.id),
+              assignments: (assignmentsRes.data ?? []).filter((a: any) => a.module_id === m.id),
+            }));
+          },
+          fetchLesson: async (lessonId: string) => {
+            const { data, error } = await supabase
+              .from("lessons")
+              .select("*, modules:module_id(title, week, course_id)")
+              .eq("id", lessonId)
+              .single();
+            if (error) throw error;
+            return data;
+          },
+        },
+        (done, total) => setDownloadProgress(Math.round((done / total) * 100)),
+      );
+      setDownloaded(true);
+      queryClient.invalidateQueries({ queryKey: ["course-modules", courseId] });
+      toast({ title: "Available offline", description: "All modules, lessons and materials are saved for offline access." });
+    } catch (err: any) {
+      toast({ title: "Download failed", description: err.message ?? "Could not save course for offline use.", variant: "destructive" });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+
+
   const isModuleUnlocked = (moduleIndex: number): boolean => {
     if (moduleIndex === 0) return true;
     if (!modules || !progress || !submissions) return false;
