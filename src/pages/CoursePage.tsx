@@ -368,21 +368,35 @@ const CoursePage = () => {
                   </div>
                   <Progress value={overallProgress} className="h-2 bg-primary-foreground/20" />
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-                  onClick={handleDownloadOffline}
-                  disabled={downloading}
-                >
-                  {downloading ? (
-                    <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
-                  ) : downloaded ? (
-                    <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
-                  ) : (
-                    <><Download className="h-4 w-4" /> Download for offline</>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                    onClick={handleDownloadOffline}
+                    disabled={downloading}
+                  >
+                    {downloading ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Downloading… {downloadProgress}%</>
+                    ) : downloaded ? (
+                      <><CheckCheck className="h-4 w-4" /> Available offline · Update</>
+                    ) : paused ? (
+                      <><RotateCcw className="h-4 w-4" /> Resume download · {downloadProgress}%</>
+                    ) : (
+                      <><Download className="h-4 w-4" /> Download for offline</>
+                    )}
+                  </Button>
+                  {downloading && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                      onClick={handleCancelDownload}
+                    >
+                      <X className="h-4 w-4" /> Cancel
+                    </Button>
                   )}
-                </Button>
+                </div>
               </div>
             )}
 
